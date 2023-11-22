@@ -1,4 +1,4 @@
-package com.zetcode;
+package game_programming_project;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
