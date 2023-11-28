@@ -20,42 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public class Board extends JPanel implements ActionListener {
 
     private Dimension d;
@@ -92,6 +56,7 @@ public class Board extends JPanel implements ActionListener {
     private int pacman_x, pacman_y, pacmand_x, pacmand_y;
     private int req_dx, req_dy, view_dx, view_dy;
 
+//this array is responsible for the map. 
     private final short levelData[] = {
             19, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 22,
             21, 0, 0, 0, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
@@ -171,6 +136,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //So called Game Loop
     private void playGame(Graphics2D g2d) {
 
         if (dying) {
@@ -186,6 +152,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Muazzams contribution to the init screen
     private void showIntroScreen(Graphics2D g2d) {
 
         g2d.setColor(new Color(0, 32, 48));
@@ -202,6 +169,7 @@ public class Board extends JPanel implements ActionListener {
         g2d.drawString(s, (SCREEN_SIZE - metr.stringWidth(s)) / 2, SCREEN_SIZE / 2);
     }
 
+    //Display score method
     private void drawScore(Graphics2D g) {
 
         int i;
@@ -247,6 +215,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Pacman Dies
     private void death() {
 
         pacsLeft--;
@@ -258,6 +227,7 @@ public class Board extends JPanel implements ActionListener {
         continueLevel();
     }
 
+    //Complete logic of ghosts movement 
     private void moveGhosts(Graphics2D g2d) {
 
         short i;
@@ -331,11 +301,13 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Puts ghosts on the board
     private void drawGhost(Graphics2D g2d, int x, int y) {
 
         g2d.drawImage(ghost, x, y, this);
     }
 
+    //How pacman can move on a board 
     private void movePacman() {
 
         int pos;
@@ -382,6 +354,7 @@ public class Board extends JPanel implements ActionListener {
         pacman_y = pacman_y + PACMAN_SPEED * pacmand_y;
     }
 
+    //method is responsible for drawing the Pacman character based on its current direction.
     private void drawPacman(Graphics2D g2d) {
 
         if (view_dx == -1) {
@@ -395,6 +368,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Animation when pacman moves up 
     private void drawPacmanUp(Graphics2D g2d) {
 
         switch (pacmanAnimPos) {
@@ -413,6 +387,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Animation when pacman moves down
     private void drawPacmanDown(Graphics2D g2d) {
 
         switch (pacmanAnimPos) {
@@ -431,6 +406,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    // Animation when pacman moves left
     private void drawPacnanLeft(Graphics2D g2d) {
 
         switch (pacmanAnimPos) {
@@ -449,6 +425,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //Animation when pacman moves right 
     private void drawPacmanRight(Graphics2D g2d) {
 
         switch (pacmanAnimPos) {
@@ -467,6 +444,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    // Map drawing algorithm  
     private void drawMaze(Graphics2D g2d) {
 
         short i = 0;
@@ -506,6 +484,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //when you either press start or run - this method is called 
     private void initGame() {
 
         pacsLeft = 3;
@@ -515,6 +494,7 @@ public class Board extends JPanel implements ActionListener {
         currentSpeed = 3;
     }
 
+    //when you either press start or run - this method is called 
     private void initLevel() {
 
         int i;
@@ -525,6 +505,8 @@ public class Board extends JPanel implements ActionListener {
         continueLevel();
     }
 
+    //method appears to be responsible for initializing or continuing the game state when 
+    //a level is ongoing or when transitioning to a new level.
     private void continueLevel() {
 
         short i;
@@ -558,6 +540,7 @@ public class Board extends JPanel implements ActionListener {
         dying = false;
     }
 
+    //this method kinda tells the compiler "Hi , here is the images you are going to use"
     private void loadImages() {
 
         ghost = new ImageIcon("src/resources/images/ghost.png").getImage();
@@ -606,6 +589,7 @@ public class Board extends JPanel implements ActionListener {
         g2d.dispose();
     }
 
+    //can be moved to another class
     class TAdapter extends KeyAdapter {
 
         @Override
@@ -656,6 +640,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    //can be moved to aanother class 
     @Override
     public void actionPerformed(ActionEvent e) {
 
