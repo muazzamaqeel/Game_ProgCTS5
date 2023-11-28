@@ -1,5 +1,10 @@
 package com.zetcode;
 
+// alternative 
+// import java.awt.*;
+// import java.awt.event.*;
+// import javax.swing.*;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
