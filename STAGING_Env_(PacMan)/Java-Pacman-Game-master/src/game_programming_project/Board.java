@@ -22,40 +22,6 @@ import javax.swing.Timer;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public class Board extends JPanel implements ActionListener {
 
     private Dimension d;
@@ -63,7 +29,7 @@ public class Board extends JPanel implements ActionListener {
 
     private Image ii;
     private final Color dotColor = new Color(192, 192, 0);
-    private Color mazeColor;
+    Color mazeColor;
 
     private boolean inGame = false;
     private boolean dying = false;
