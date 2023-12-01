@@ -61,7 +61,20 @@ public class Board extends JPanel implements ActionListener {
     private int pacman_x, pacman_y, pacmand_x, pacmand_y;
     private int req_dx, req_dy, view_dx, view_dy;
 
-//this array is responsible for the map. 
+    //0 - empty space
+    //1 - vertical wall
+    //9 - corner |__
+    //16 - dot
+    //17 - vertical wall and dot right side
+    //18 - horizontal wall and the dot under
+    //19 - corner and a dot inside it (Left top)
+    //20 - vertical wall and dot left side
+    //21 - |.|
+    //22 - corner and a dot inside it (Right top)
+    //24 - horizontal wall and the dot above
+    //25 - corner and a dot inside it (left bottom)
+    //26 - horizontal tunnel and dot innit
+    //28 - corner and a dot inside it (Right bottom)
     private final short levelData[] = {
             19, 26, 26, 26, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 22,
             21, 0, 0, 0, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20,
