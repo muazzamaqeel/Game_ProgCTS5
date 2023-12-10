@@ -27,7 +27,10 @@ public class GameFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        GameFrame d = new GameFrame();
-        d.setVisible(true);
+
+        EventQueue.invokeLater(() -> {
+            var ex = new HomeScreen();
+            ex.setVisible(true);
+        });
     }
 }
