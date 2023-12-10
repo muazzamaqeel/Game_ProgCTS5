@@ -5,7 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Pacman extends JFrame {
+public class Pacman extends JFrame implements Settings.MapSelectionListener {
+    private JPanel currentMap; // Added currentMap variable
 
     public Pacman() {
         initUI();
@@ -14,14 +15,43 @@ public class Pacman extends JFrame {
     private void initUI() {
         setTitle("PACMAN REMASTERED");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 500);
+        setSize(800, 800);
+        setResizable(false); // Set window not resizable
         setLocationRelativeTo(null);
 
-        // Create panel to hold buttons
+        // Create panel to hold buttons, image, and text
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
+        panel.setBackground(Color.BLACK); // Set background color to black
+
         GridBagConstraints gbc = new GridBagConstraints();
+
+        // Text label
+        JLabel textLabel = new JLabel("PAC-MAN!");
+        textLabel.setFont(new Font("Arial", Font.BOLD, 40)); // Set the desired font and size
+        textLabel.setForeground(Color.YELLOW); // Set text color to yellow
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 0, 20, 0); // Add space top and bottom
+        panel.add(textLabel, gbc);
+
+        // Image label
+        ImageIcon icon = new ImageIcon("src/resources/images/Main_Window_Wallpaper.jpg"); // Replace with your image path
+        JLabel imageLabel = new JLabel(icon);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 50, 0); // Add space after the image
+        panel.add(imageLabel, gbc);
+
+        // Reset gridwidth for buttons
+        gbc.gridwidth = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Add horizontal space before the buttons
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(Box.createHorizontalStrut(200), gbc); // Adjust the strut size as needed
 
         // Play button
         JButton playBtn = new JButton("Play");
@@ -33,8 +63,7 @@ public class Pacman extends JFrame {
                 startGame();
             }
         });
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridx = 1;
         panel.add(playBtn, gbc);
 
         // Settings button
@@ -47,7 +76,7 @@ public class Pacman extends JFrame {
                 openSettings();
             }
         });
-        gbc.gridy = 1;
+        gbc.gridx = 2;
         panel.add(settingsBtn, gbc);
 
         // Quit button
@@ -60,25 +89,61 @@ public class Pacman extends JFrame {
                 System.exit(0);
             }
         });
-        gbc.gridy = 2;
+        gbc.gridx = 3;
         panel.add(quitBtn, gbc);
+
+        // Add horizontal space after the buttons
+        gbc.gridx = 4;
+        panel.add(Box.createHorizontalStrut(200), gbc); // Adjust the strut size as needed
 
         add(panel);
     }
 
+
+    private void openSettings() {
+        // Open settings window with this class as the listener
+        Settings settings = new Settings(this);
+        settings.setVisible(true);
+    }
+
+    private boolean mapSelected = false;
+
+    public void onMapSelected(int mapNumber) {
+        switch (mapNumber) {
+            case 1:
+                currentMap = new Board();
+                break;
+            case 2:
+                currentMap = new Map3();
+                break;
+            case 3:
+                currentMap = new Map3();
+                break;
+            default:
+                currentMap = new Board();
+                break;
+        }
+        mapSelected = true; // Set flag to indicate map selection
+    }
+
     private void startGame() {
-        // Start the game by creating a new Board and setting it visible
-        Board board = new Board();
+        if (!mapSelected) {
+            // If no map selected, set a default map (Board in this case)
+            onMapSelected(1);
+        }
+
+        getContentPane().removeAll();
+        getContentPane().add(currentMap);
+        revalidate();
+        currentMap.requestFocus();
+    }
+
+
+    private void startGame(JPanel board) {
         getContentPane().removeAll();
         getContentPane().add(board);
         revalidate();
         board.requestFocus();
-    }
-
-    private void openSettings() {
-        // Open settings window
-        Settings settings = new Settings();
-        settings.setVisible(true);
     }
 
     public static void main(String[] args) {

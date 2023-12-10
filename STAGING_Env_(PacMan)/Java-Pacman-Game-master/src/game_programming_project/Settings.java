@@ -5,22 +5,35 @@ import java.awt.*;
 
 public class Settings extends JFrame {
 
-    public Settings() {
+    interface MapSelectionListener {
+        void onMapSelected(int mapNumber);
+    }
+
+    private MapSelectionListener listener;
+
+    public Settings(Pacman pacman) {
+        this.listener = pacman; // Change 'listener' to 'pacman'
         initUI();
     }
 
+
     private void initUI() {
-        setTitle("Settings");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle("Select Map");
         setSize(300, 200);
         setLocationRelativeTo(null);
+        setLayout(new FlowLayout());
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        JButton map1Button = new JButton("Map 1");
+        map1Button.addActionListener(e -> listener.onMapSelected(1));
 
-        JLabel label = new JLabel("Settings will be here");
-        panel.add(label);
+        JButton map2Button = new JButton("Map 2");
+        map2Button.addActionListener(e -> listener.onMapSelected(2));
 
-        add(panel);
+        JButton map3Button = new JButton("Map 3");
+        map3Button.addActionListener(e -> listener.onMapSelected(3));
+
+        add(map1Button);
+        add(map2Button);
+        add(map3Button);
     }
 }
