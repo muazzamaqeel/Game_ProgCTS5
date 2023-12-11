@@ -102,7 +102,7 @@ public class HomeScreen extends JFrame{
 
         // Add horizontal space after the buttons
         gbc.gridx = 4;
-        panel.add(Box.createHorizontalStrut(200), gbc); // Adjust the strut size as needed
+        panel.add(Box.createHorizontalStrut(200), gbc);
 
         add(panel);
     }
