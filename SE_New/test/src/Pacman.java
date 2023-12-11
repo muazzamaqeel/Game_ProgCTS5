@@ -1,13 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
+import java.util.Objects;
 
 public class Pacman {
     //image for pacman
-    private Image pacman_close_mouth;
-    private Image pacman_open_mouth;
+    private final Image pacman_close_mouth;
     private static Pacman pacman;
 
     //coordinates
@@ -20,13 +18,22 @@ public class Pacman {
     public static final double PLAYER_SIZE = 100;
 
     public Pacman() {
-        this.pacman_close_mouth = new ImageIcon(getClass().getResource("game/images/pixil-frame-0-4.png")).getImage();
-        this.pacman_open_mouth = new ImageIcon(getClass().getResource("game/images/pixil-frame-0-5.png")).getImage();
+        this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();
+        Image pacman_open_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-5.png"))).getImage();
+
+        this.x = (double) Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
+        this.y = (Board.TILE_NUMBER - 2) * Board.GRID_HEIGHT;
     }
 
-    public void move() {
-        x += speed * Math.cos(Math.toRadians(angle));
-        y += speed * Math.sin(Math.toRadians(angle));
+    public void move(Board board) {
+        double nextX = x + speed * Math.cos(Math.toRadians(angle));
+        double nextY = y + speed * Math.sin(Math.toRadians(angle));
+
+        // Check if the next position is within a path
+        if (board.isPath(nextX, nextY)) {
+            x = nextX;
+            y = nextY;
+        }
     }
 
 

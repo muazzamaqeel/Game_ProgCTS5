@@ -32,7 +32,7 @@ public class GamePanel extends JComponent {
                 drawBackground();
                 drawGame();
                 render();
-                pacman.move();
+                pacman.move(board);
                 long time = System.nanoTime() - startTime;
                 if (time < TARGET_TIME){
                     long sleep = (TARGET_TIME - time) / 1000000;
@@ -46,14 +46,13 @@ public class GamePanel extends JComponent {
         thread.start();
     }
 
-    public void initObjGame(){
+    public void initObjGame() {
         pacman = Pacman.getInstance();
-        board = new Board();
-        //pacman = new Pacman();
-        //pacman.changePosition(350, 350);
+        board = new Board(); // This initializes the maze layout
+        // Any other game object initializations can be added here
     }
 
-    public void initUserInput(){
+    public void initUserInput() {
         userInput = new UserInput();
         requestFocus();
         addKeyListener(new KeyAdapter() {
