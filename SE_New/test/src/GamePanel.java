@@ -59,27 +59,37 @@ public class GamePanel extends JComponent {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_A){
-                    userInput.setKey_a(true);
-                } else if (e.getKeyCode() == KeyEvent.VK_W){
-                    userInput.setKey_w(true);
-                } else if (e.getKeyCode() == KeyEvent.VK_D){
-                    userInput.setKey_d(true);
-                } else if (e.getKeyCode() == KeyEvent.VK_S){
-                    userInput.setKey_s(true);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_A:
+                        pacman.changeAngle(180); // Left
+                        break;
+                    case KeyEvent.VK_W:
+                        pacman.changeAngle(270); // Up
+                        break;
+                    case KeyEvent.VK_D:
+                        pacman.changeAngle(0);   // Right
+                        break;
+                    case KeyEvent.VK_S:
+                        pacman.changeAngle(90);  // Down
+                        break;
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_A){
-                    userInput.setKey_a(false);
-                } else if (e.getKeyCode() == KeyEvent.VK_W){
-                    userInput.setKey_w(false);
-                } else if (e.getKeyCode() == KeyEvent.VK_D){
-                    userInput.setKey_d(false);
-                } else if (e.getKeyCode() == KeyEvent.VK_S){
-                    userInput.setKey_s(false);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_A:
+                        userInput.setKey_a(false);
+                        break;
+                    case KeyEvent.VK_W:
+                        userInput.setKey_w(false);
+                        break;
+                    case KeyEvent.VK_D:
+                        userInput.setKey_d(false);
+                        break;
+                    case KeyEvent.VK_S:
+                        userInput.setKey_s(false);
+                        break;
                 }
             }
         });

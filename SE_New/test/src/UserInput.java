@@ -1,7 +1,10 @@
 public class UserInput {
-    private boolean key_a, key_w, key_d, key_s;
+    private static boolean key_a;
+    private static boolean key_w;
+    private static boolean key_d;
+    private static boolean key_s;
 
-    public boolean isKey_a() {
+    public static boolean isKey_a() {
         return key_a;
     }
 
@@ -9,7 +12,7 @@ public class UserInput {
         this.key_a = key_a;
     }
 
-    public boolean isKey_w() {
+    public static boolean isKey_w() {
         return key_w;
     }
 
@@ -17,7 +20,7 @@ public class UserInput {
         this.key_w = key_w;
     }
 
-    public boolean isKey_d() {
+    public static boolean isKey_d() {
         return key_d;
     }
 
@@ -25,7 +28,7 @@ public class UserInput {
         this.key_d = key_d;
     }
 
-    public boolean isKey_s() {
+    public static boolean isKey_s() {
         return key_s;
     }
 
