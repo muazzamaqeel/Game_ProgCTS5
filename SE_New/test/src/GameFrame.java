@@ -27,7 +27,8 @@ public class GameFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-
+        System.setProperty("java.awt.headless", "false");
+        System.setProperty("apple.awt.UIElement", "true"); // For Mac users, whom are "Cool"
         EventQueue.invokeLater(() -> {
             var ex = new HomeScreen();
             ex.setVisible(true);

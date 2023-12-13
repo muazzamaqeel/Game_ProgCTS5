@@ -1,15 +1,20 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-public class HomeScreen extends JFrame{
-    private JPanel currentMap; // Added currentMap variable
+public class HomeScreen extends JFrame {
+    private Settings settings;
 
     public HomeScreen() {
         initUI();
+        settings = new Settings(new Settings.MapSelectionListener() {
+            @Override
+            public void onMapSelected(int mapNumber) {
+                // Handle map selection logic here
+                System.out.println("Selected Map in HomeScreen: " + mapNumber);
+            }
+        });
     }
 
     public void closeWindow() {
@@ -20,44 +25,38 @@ public class HomeScreen extends JFrame{
         setTitle("PACMAN REMASTERED");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 800);
-        setResizable(false); // Set window not resizable
+        setResizable(false);
         setLocationRelativeTo(null);
 
-        // Create panel to hold buttons, image, and text
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.setBackground(Color.BLACK); // Set background color to black
+        panel.setBackground(Color.BLACK);
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // Text label
         JLabel textLabel = new JLabel("PAC-MAN!");
-        textLabel.setFont(new Font("Arial", Font.BOLD, 40)); // Set the desired font and size
-        textLabel.setForeground(Color.YELLOW); // Set text color to yellow
+        textLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        textLabel.setForeground(Color.YELLOW);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(20, 0, 20, 0); // Add space top and bottom
+        gbc.insets = new Insets(20, 0, 20, 0);
         panel.add(textLabel, gbc);
 
-        // Image label
-        ImageIcon icon = new ImageIcon("src/resources/images/Main_Window_Wallpaper.jpg"); // Replace with your image path
+        ImageIcon icon = new ImageIcon("src/resources/images/Main_Window_Wallpaper.jpg");
         JLabel imageLabel = new JLabel(icon);
         gbc.gridy = 1;
-        gbc.insets = new Insets(0, 0, 50, 0); // Add space after the image
+        gbc.insets = new Insets(0, 0, 50, 0);
         panel.add(imageLabel, gbc);
 
-        // Reset gridwidth for buttons
         gbc.gridwidth = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Add horizontal space before the buttons
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(Box.createHorizontalStrut(200), gbc); // Adjust the strut size as needed
+        panel.add(Box.createHorizontalStrut(200), gbc);
 
-        // Play button
         JButton playBtn = new JButton("Play");
         playBtn.setPreferredSize(new Dimension(100, 40));
         playBtn.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -66,28 +65,24 @@ public class HomeScreen extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 GameFrame d = new GameFrame();
                 d.setVisible(true);
-
-                // Close the current window
                 HomeScreen.this.closeWindow();
             }
         });
         gbc.gridx = 1;
         panel.add(playBtn, gbc);
 
-        // Settings button
         JButton settingsBtn = new JButton("Settings");
         settingsBtn.setPreferredSize(new Dimension(100, 40));
         settingsBtn.setFont(new Font("Arial", Font.PLAIN, 16));
         settingsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //openSettings();
+                openSettings();
             }
         });
         gbc.gridx = 2;
         panel.add(settingsBtn, gbc);
 
-        // Quit button
         JButton quitBtn = new JButton("Quit");
         quitBtn.setPreferredSize(new Dimension(100, 40));
         quitBtn.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -100,11 +95,14 @@ public class HomeScreen extends JFrame{
         gbc.gridx = 3;
         panel.add(quitBtn, gbc);
 
-        // Add horizontal space after the buttons
         gbc.gridx = 4;
         panel.add(Box.createHorizontalStrut(200), gbc);
 
         add(panel);
     }
 
+    private void openSettings() {
+        settings.openSettings();
+    }
 }
+
