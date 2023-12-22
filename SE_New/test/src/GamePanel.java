@@ -1,12 +1,19 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePanel extends JComponent {
+    private List<Ghost> ghosts; // Add a list to hold the ghosts
+
     private Graphics2D g2;
     private BufferedImage panel;
     private Board board;
@@ -26,6 +33,9 @@ public class GamePanel extends JComponent {
         height = 800;
         panel = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         g2 = panel.createGraphics();
+
+
+
         thread = new Thread(() -> {
             while (start){
                 long startTime = System.nanoTime();
@@ -33,6 +43,9 @@ public class GamePanel extends JComponent {
                 drawGame();
                 render();
                 pacman.move(board);
+                for (Ghost ghost : ghosts) {
+                    ghost.move(); // Move each ghost
+                }
                 long time = System.nanoTime() - startTime;
                 if (time < TARGET_TIME){
                     long sleep = (TARGET_TIME - time) / 1000000;
@@ -49,7 +62,11 @@ public class GamePanel extends JComponent {
     public void initObjGame() {
         pacman = Pacman.getInstance();
         board = new Board(); // This initializes the maze layout
-        // Any other game object initializations can be added here
+        ghosts = new ArrayList<>(); // Initialize the list of ghosts
+
+
+        ghosts.add(new Ghost(board));
+
     }
 
     public void initUserInput() {
@@ -116,14 +133,23 @@ public class GamePanel extends JComponent {
     }
 
     public void drawGame(){
-       pacman.draw(g2);
-       board.draw(g2);
+        board.draw(g2);
+        pacman.draw(g2);
+        // Draw each ghost
+        for (Ghost ghost : ghosts) {
+            ghost.draw(g2);
+        }
     }
 
-    public void render(){
-        Graphics g = getGraphics();
-        g.drawImage(panel, 0, 0, null);
-        g.dispose();
+    public void render() {
+        repaint();
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (panel != null) {
+            g.drawImage(panel, 0, 0, this);
+        }
     }
 
     private void sleep(long speed){
