@@ -21,15 +21,18 @@ public class Board {
     }
 
     public boolean isPath(double x, double y) {
-        int row = (int) (y / GRID_HEIGHT);
-        int col = (int) (x / GRID_WIDTH);
+        int leftCol = (int) x / GRID_WIDTH;
+        int rightCol = (int) (x + GRID_WIDTH - 1) / GRID_WIDTH;
+        int topRow = (int) y / GRID_HEIGHT;
+        int bottomRow = (int) (y + GRID_HEIGHT - 1) / GRID_HEIGHT;
 
-        // Check if the row and col are within the grid bounds
-        if (row >= 0 && row < TILE_NUMBER && col >= 0 && col < TILE_NUMBER) {
-            return grid[row][col] == 0; // 0 represents a path
-        }
-
-        return false;
+        // Check if any of the corners of the ghost's tile are not a path
+        return leftCol >= 0 && rightCol < TILE_NUMBER &&
+                topRow >= 0 && bottomRow < TILE_NUMBER &&
+                grid[topRow][leftCol] == 0 &&
+                grid[topRow][rightCol] == 0 &&
+                grid[bottomRow][leftCol] == 0 &&
+                grid[bottomRow][rightCol] == 0;
     }
 
     private void initializeMaze() {
@@ -53,14 +56,10 @@ public class Board {
         }
 
         // Add internal walls
-        for (int col = 2; col < TILE_NUMBER - 2; col++) {
-            grid[2][col] = 1;
-            grid[TILE_NUMBER - 3][col] = 1;
-        }
-
-        for (int row = 3; row < TILE_NUMBER - 3; row++) {
-            grid[row][2] = 1;
-            grid[row][TILE_NUMBER - 3] = 1;
+        for (int col = 2; col < TILE_NUMBER - 2; col += 2) {
+            for (int row = 2; row < TILE_NUMBER - 2; row++) {
+                grid[row][col] = 1;
+            }
         }
 
         // Create a central box
@@ -69,7 +68,6 @@ public class Board {
                 grid[row][col] = 1;
             }
         }
-
     }
 
     public void draw(Graphics2D graphics2D) {
