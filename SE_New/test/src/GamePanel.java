@@ -3,17 +3,11 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GamePanel extends JComponent {
-    private List<Ghost> ghosts; // Add a list to hold the ghosts
-
+    private List<Ghost> ghosts;
     private Graphics2D g2;
     private BufferedImage panel;
     private Board board;
@@ -28,32 +22,33 @@ public class GamePanel extends JComponent {
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
 
-    public void start(){
+    public void start() {
         width = 800;
         height = 800;
         panel = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         g2 = panel.createGraphics();
 
-
-
         thread = new Thread(() -> {
-            while (start){
-                long startTime = System.nanoTime();
+            long startTime = 0;
+            while (start) {
+                startTime = System.nanoTime();
                 drawBackground();
                 drawGame();
                 render();
+
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
-                    ghost.move(); // Move each ghost
+                    ghost.move(pacman);
                 }
                 long time = System.nanoTime() - startTime;
-                if (time < TARGET_TIME){
+                if (time < TARGET_TIME) {
                     long sleep = (TARGET_TIME - time) / 1000000;
                     sleep(sleep);
                     //System.out.println(sleep);
                 }
             }
         });
+
         initObjGame();
         initUserInput();
         thread.start();
@@ -61,12 +56,10 @@ public class GamePanel extends JComponent {
 
     public void initObjGame() {
         pacman = Pacman.getInstance();
-        board = new Board(); // This initializes the maze layout
+        board = new Board(); // Initializes the maze layout
         ghosts = new ArrayList<>(); // Initialize the list of ghosts
 
-
         ghosts.add(new Ghost(board));
-
     }
 
     public void initUserInput() {
@@ -112,12 +105,12 @@ public class GamePanel extends JComponent {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(start){
+                while (start) {
                     float angle = pacman.getAngle();
-                    if (userInput.isKey_a()){
+                    if (userInput.isKey_a()) {
                         angle -= 90;
                     }
-                    if (userInput.isKey_d()){
+                    if (userInput.isKey_d()) {
                         angle += 90;
                     }
                     pacman.changeAngle(angle);
@@ -127,12 +120,12 @@ public class GamePanel extends JComponent {
         }).start();
     }
 
-    public void drawBackground(){
+    public void drawBackground() {
         g2.setColor(Color.DARK_GRAY);
         g2.fillRect(0, 0, width, height);
     }
 
-    public void drawGame(){
+    public void drawGame() {
         board.draw(g2);
         pacman.draw(g2);
         // Draw each ghost
@@ -144,6 +137,7 @@ public class GamePanel extends JComponent {
     public void render() {
         repaint();
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -152,14 +146,12 @@ public class GamePanel extends JComponent {
         }
     }
 
-    private void sleep(long speed){
+    private void sleep(long speed) {
         try {
             Thread.sleep(speed);
         } catch (InterruptedException e) {
             System.err.println(e);
         }
     }
-
-
 }
 //Test
