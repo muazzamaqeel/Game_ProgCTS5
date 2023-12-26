@@ -16,7 +16,6 @@ public class HomeScreen extends JFrame {
             }
         });
     }
-
     public void closeWindow() {
         this.dispose();
     }
@@ -44,7 +43,7 @@ public class HomeScreen extends JFrame {
         gbc.insets = new Insets(20, 0, 20, 0);
         panel.add(textLabel, gbc);
 
-        ImageIcon icon = new ImageIcon("src/resources/images/Main_Window_Wallpaper.jpg");
+        ImageIcon icon = new ImageIcon("src/game/images/Main_Window_Wallpaper.jpg");
         JLabel imageLabel = new JLabel(icon);
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 50, 0);

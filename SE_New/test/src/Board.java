@@ -13,7 +13,7 @@ public class Board {
 
     public Board() {
         // Initialize the grid...
-        grid = new int[TILE_NUMBER][TILE_NUMBER]; // Make sure this line is before initializeMaze()
+        grid = new int[TILE_NUMBER][TILE_NUMBER];
 
         try {
             initializeMaze();
@@ -24,11 +24,8 @@ public class Board {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // Create the Pacman instance and set its initial position
         Pacman pacman = Pacman.getInstance();
-        // Set Pacman's position to a valid path location, away from the walls
-        pacman.changePosition(TILE_NUMBER / 2 * GRID_WIDTH, (TILE_NUMBER - 2) * GRID_HEIGHT);
+        pacman.changePosition((double) TILE_NUMBER / 2 * GRID_WIDTH, (TILE_NUMBER - 2) * GRID_HEIGHT);
     }
 
     public boolean isPath(double x, double y) {
@@ -63,10 +60,6 @@ public class Board {
             }
         }
     }
-
-
-
-
     public void draw(Graphics2D graphics2D) {
         // Draw the grid
         for (int row = 0; row < TILE_NUMBER; row++) {
@@ -86,8 +79,6 @@ public class Board {
             }
         }
     }
-
-
     // Getters and setters
     public int[][] getGrid() {
         return grid;

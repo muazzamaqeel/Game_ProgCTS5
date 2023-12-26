@@ -14,7 +14,7 @@ public class Ghost {
     public Ghost(Board board) {
         this.board = board;
         // Adjust the speed here
-        this.speed = 1; // Example speed
+        this.speed = 1;
         initializePosition();
     }
     private void initializePosition() {
