@@ -18,7 +18,7 @@ public class Map3 {
         // You can initialize the grid with specific values if needed
         // For example, grid[0][0] = 1; // This represents a specific type of tile
     }
-
+    //Test
     public void draw(Graphics2D graphics2D) {
         // Draw the grid
         for (int row = 0; row < TILE_NUMBER; row++) {
