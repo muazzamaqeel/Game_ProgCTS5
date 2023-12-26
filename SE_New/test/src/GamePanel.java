@@ -146,6 +146,7 @@ public class GamePanel extends JComponent {
         }
     }
 
+
     private void sleep(long speed) {
         try {
             Thread.sleep(speed);
@@ -153,5 +154,8 @@ public class GamePanel extends JComponent {
             System.err.println(e);
         }
     }
+
+
+
 }
 //Test
