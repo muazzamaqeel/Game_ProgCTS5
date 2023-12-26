@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.io.*;
+import java.util.Scanner;
 
 public class Board {
     public static final int TILE_NUMBER = 8;
@@ -10,9 +12,18 @@ public class Board {
     private int[][] grid;
 
     public Board() {
-        // Initialize the grid
-        grid = new int[TILE_NUMBER][TILE_NUMBER];
-        initializeMaze();
+        // Initialize the grid...
+        grid = new int[TILE_NUMBER][TILE_NUMBER]; // Make sure this line is before initializeMaze()
+
+        try {
+            initializeMaze();
+        } catch (FileNotFoundException e) {
+            System.err.println("Maze file not found.");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Create the Pacman instance and set its initial position
         Pacman pacman = Pacman.getInstance();
@@ -35,40 +46,26 @@ public class Board {
                 grid[bottomRow][rightCol] == 0;
     }
 
-    private void initializeMaze() {
-        // Set the entire grid as paths initially
-        for (int row = 0; row < TILE_NUMBER; row++) {
-            for (int col = 0; col < TILE_NUMBER; col++) {
-                grid[row][col] = 0; // Path
-            }
+    private void initializeMaze() throws IOException {
+        File file = new File("src/game/maps/maze1.txt");
+        if (!file.exists()) {
+            throw new IOException("File not found: src/game/maps/maze.txt");
         }
 
-        // Top and bottom borders
-        for (int col = 0; col < TILE_NUMBER; col++) {
-            grid[0][col] = 1;
-            grid[TILE_NUMBER - 1][col] = 1;
-        }
-
-        // Left and right borders
-        for (int row = 1; row < TILE_NUMBER - 1; row++) {
-            grid[row][0] = 1;
-            grid[row][TILE_NUMBER - 1] = 1;
-        }
-
-        // Add internal walls
-        for (int col = 2; col < TILE_NUMBER - 2; col += 2) {
-            for (int row = 2; row < TILE_NUMBER - 2; row++) {
-                grid[row][col] = 1;
-            }
-        }
-
-        // Create a central box
-        for (int row = TILE_NUMBER / 2 - 1; row <= TILE_NUMBER / 2 + 1; row++) {
-            for (int col = TILE_NUMBER / 2 - 1; col <= TILE_NUMBER / 2 + 1; col++) {
-                grid[row][col] = 1;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int row = 0;
+            while ((line = reader.readLine()) != null && row < TILE_NUMBER) {
+                for (int col = 0; col < TILE_NUMBER && col < line.length(); col++) {
+                    grid[row][col] = Character.getNumericValue(line.charAt(col));
+                }
+                row++;
             }
         }
     }
+
+
+
 
     public void draw(Graphics2D graphics2D) {
         // Draw the grid
@@ -78,15 +75,18 @@ public class Board {
                 int tileY = row * GRID_HEIGHT;
 
                 if (grid[row][col] == 1) {
-                    // Draw walls
-                    graphics2D.setColor(Color.WHITE); // Wall color
+                    // Draw walls in black
+                    graphics2D.setColor(Color.BLACK); // Changed wall color to black
                     graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 } else {
-                    // Optionally draw paths with a different color or leave them as is
+                    // Draw paths - optional; could be left as is for a white background
+                    graphics2D.setColor(Color.WHITE); // Path color
+                    graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 }
             }
         }
     }
+
 
     // Getters and setters
     public int[][] getGrid() {
