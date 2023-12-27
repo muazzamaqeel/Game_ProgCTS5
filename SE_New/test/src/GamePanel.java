@@ -61,44 +61,33 @@ public class GamePanel extends JComponent {
 
         ghosts.add(new Ghost(board));
     }
-
     public void initUserInput() {
         userInput = new UserInput();
         requestFocus();
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_A:
-                        pacman.changeAngle(180); // Left
-                        break;
-                    case KeyEvent.VK_W:
-                        pacman.changeAngle(270); // Up
-                        break;
-                    case KeyEvent.VK_D:
-                        pacman.changeAngle(0);   // Right
-                        break;
-                    case KeyEvent.VK_S:
-                        pacman.changeAngle(90);  // Down
-                        break;
+                if (e.getKeyCode() == KeyEvent.VK_A) {
+                    userInput.setKey_a(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    userInput.setKey_w(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    userInput.setKey_d(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    userInput.setKey_s(true);
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_A:
-                        userInput.setKey_a(false);
-                        break;
-                    case KeyEvent.VK_W:
-                        userInput.setKey_w(false);
-                        break;
-                    case KeyEvent.VK_D:
-                        userInput.setKey_d(false);
-                        break;
-                    case KeyEvent.VK_S:
-                        userInput.setKey_s(false);
-                        break;
+                if (e.getKeyCode() == KeyEvent.VK_A) {
+                    userInput.setKey_a(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    userInput.setKey_w(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    userInput.setKey_d(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    userInput.setKey_s(false);
                 }
             }
         });
@@ -108,13 +97,35 @@ public class GamePanel extends JComponent {
                 while (start) {
                     float angle = pacman.getAngle();
                     if (userInput.isKey_a()) {
-                        angle -= 90;
-                    }
-                    if (userInput.isKey_d()) {
-                        angle += 90;
+                        if (board.isLeftFree(pacman.getX(), pacman.getY())) {
+                            angle = 180;
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_d()) {
+                        if (board.isRightFree(pacman.getX(), pacman.getY())) {
+                            angle = 0;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_w()) {
+                        if (board.isUpFree(pacman.getX(), pacman.getY())) {
+                            angle = 270;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_s()) {
+                        if (board.isDownFree(pacman.getX(), pacman.getY())) {
+                            angle = 90;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
                     }
                     pacman.changeAngle(angle);
-                    sleep(85);
+                    sleep(1);
                 }
             }
         }).start();

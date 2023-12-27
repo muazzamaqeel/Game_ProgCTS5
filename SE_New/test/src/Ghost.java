@@ -38,8 +38,6 @@ public class Ghost {
             }
         }
     }
-
-    // Draw the ghost on the board
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
         g.fillOval(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT);

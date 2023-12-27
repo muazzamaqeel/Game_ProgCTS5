@@ -87,7 +87,58 @@ public class Board {
     public void setGrid(int[][] grid) {
         this.grid = grid;
     }
+
+    public boolean isRightFree(double x, double y) {
+        // Calculate the grid indices for the tiles to the right of the pacman
+        int rightCol = (int) (x + GRID_WIDTH) / GRID_WIDTH;
+        int topRow = (int) y / GRID_HEIGHT;
+        int bottomRow = (int) (y + GRID_HEIGHT - 1) / GRID_HEIGHT;
+
+        // Check if the tiles to the right are within bounds and are free paths
+        return rightCol < TILE_NUMBER &&
+                grid[topRow][rightCol] == 0 &&
+                grid[bottomRow][rightCol] == 0;
+    }
+
+    public boolean isLeftFree(double x, double y) {
+        // Calculate the grid indices for the tiles to the left of the pacman
+        int leftCol = (int) (x - GRID_WIDTH) / GRID_WIDTH;
+        int topRow = (int) y / GRID_HEIGHT;
+        int bottomRow = (int) (y + GRID_HEIGHT - 1) / GRID_HEIGHT;
+
+        // Check if the tiles to the left are within bounds and are free paths
+        return leftCol >= 0 &&
+                grid[topRow][leftCol] == 0 &&
+                grid[bottomRow][leftCol] == 0;
+    }
+
+    public boolean isUpFree(double x, double y) {
+        // Calculate the grid indices for the tiles above the pacman
+        int leftCol = (int) x / GRID_WIDTH;
+        int rightCol = (int) (x + GRID_WIDTH - 1) / GRID_WIDTH;
+        int topRow = (int) (y - GRID_HEIGHT) / GRID_HEIGHT;
+
+        // Check if the tiles above are within bounds and are free paths
+        return topRow >= 0 &&
+                grid[topRow][leftCol] == 0 &&
+                grid[topRow][rightCol] == 0;
+    }
+
+    public boolean isDownFree(double x, double y) {
+        // Calculate the grid indices for the tiles below the pacman
+        int leftCol = (int) x / GRID_WIDTH;
+        int rightCol = (int) (x + GRID_WIDTH - 1) / GRID_WIDTH;
+        int bottomRow = (int) (y + GRID_HEIGHT) / GRID_HEIGHT;
+
+        // Check if the tiles below are within bounds and are free paths
+        return bottomRow < TILE_NUMBER &&
+                grid[bottomRow][leftCol] == 0 &&
+                grid[bottomRow][rightCol] == 0;
+    }
+
+
 }
+
 
 
 //Test
