@@ -43,7 +43,6 @@ public class Food {
     private void drawGlowingBall(Graphics2D g2, Point center, float radius) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Create a radial gradient with multiple colors for a shaded effect
         RadialGradientPaint paint = new RadialGradientPaint(
                 new Point2D.Float(center.x, center.y),
                 radius,
@@ -57,7 +56,6 @@ public class Food {
         g2.setPaint(paint);
         g2.fillOval((int) (center.x - radius), (int) (center.y - radius), (int) (radius * 2), (int) (radius * 2));
 
-        // Add a highlight to simulate a light source reflection
         paint = new RadialGradientPaint(
                 new Point2D.Float(center.x - radius * 0.2f, center.y - radius * 0.2f),
                 radius * 0.5f,
@@ -66,8 +64,6 @@ public class Food {
         );
         g2.setPaint(paint);
         g2.fillOval((int) (center.x - radius), (int) (center.y - radius), (int) (radius * 2), (int) (radius * 2));
-
-        // Draw an additional glow if you want to give it more of an aura
         paint = new RadialGradientPaint(
                 center,
                 radius * 1.5f,
@@ -111,7 +107,7 @@ public class Food {
     public void drawScore(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
-        g2.drawString("Score: " + score, 650, 30); // Top right corner
+        g2.drawString("Score: " + score, 650, 30);
     }
 
     // Getters and setters
