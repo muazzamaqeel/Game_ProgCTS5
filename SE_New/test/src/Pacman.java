@@ -10,7 +10,7 @@ public class Pacman {
 
     //coordinates
     private double x,y;
-    private float speed = 2f;
+    private float speed;
 
     //rotation angle
     private float angle = 0f;
@@ -20,7 +20,11 @@ public class Pacman {
     public Pacman() {
         this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();
         Image pacman_open_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-5.png"))).getImage();
-
+        if(Settings.isPacmanSpeedChanged()){
+            this.speed = (float)Settings.getNewPacmanSpeed();
+        }else{
+            this.speed = 2f;
+        }
         this.x = (double) Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
         this.y = (Board.TILE_NUMBER - 2) * Board.GRID_HEIGHT;
     }
@@ -84,9 +88,5 @@ public class Pacman {
 
     public void setAngle(float angle) {
         this.angle = angle;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 }

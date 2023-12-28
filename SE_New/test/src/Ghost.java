@@ -15,13 +15,21 @@ public class Ghost {
     public Ghost(Board board) {
         this.board = board;
         // Adjust the speed here
-        this.speed = 1;
+        if(Settings.isGhostSpeedChanged()){
+            this.speed = Settings.getNewGhostSpeed();
+        } else {
+            this.speed = 1;
+        }
         initializePosition();
     }
 
     public Ghost(Board board, int startX, int startY) {
         this.board = board;
-        this.speed = 1;
+        if(Settings.isGhostSpeedChanged()){
+            this.speed = Settings.getNewGhostSpeed();
+        } else {
+            this.speed = 1;
+        }
         this.x = startX;
         this.y = startY;
     }

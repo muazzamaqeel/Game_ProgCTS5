@@ -44,7 +44,19 @@ public class Board {
     }
 
     private void initializeMaze() throws IOException {
-        File file = new File("src/game/maps/maze1.txt");
+        File file = new File("");
+
+        if(Settings.isMap1()){
+            file = new File("src/game/maps/maze1.txt");
+        }
+        if(Settings.isMap2()){
+            file = new File("src/game/maps/maze2.txt");
+        }
+        if(Settings.isMap3()){
+            file = new File("src/game/maps/maze3.txt");
+        }else{
+            file = new File("src/game/maps/default_maze.txt");
+        }
         if (!file.exists()) {
             throw new IOException("File not found: src/game/maps/maze.txt");
         }

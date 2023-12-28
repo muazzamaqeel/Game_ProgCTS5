@@ -4,9 +4,14 @@ import java.util.Hashtable;
 
 public class Settings extends JFrame {
     private final MapSelectionListener listener;
-    protected boolean map1;
-    protected boolean map2;
-    protected boolean map3;
+    protected static int newGhostSpeed;
+    protected static int newPacmanSpeed;
+    protected static boolean PacmanSpeedChanged = false;
+    protected static boolean GhostSpeedChanged = false;
+    protected static boolean default_map;
+    protected static boolean map1;
+    protected static boolean map2;
+    protected static boolean map3;
 
     public Settings(MapSelectionListener listener) {
         this.listener = listener;
@@ -82,16 +87,14 @@ public class Settings extends JFrame {
 
         // Update Pacman speed
         pacmanSpeedSlider.addChangeListener(e -> {
-            int newPacmanSpeed = ((JSlider) e.getSource()).getValue();
-            System.out.println("New Pacman Speed: " + newPacmanSpeed);
-            Pacman.getInstance().setSpeed((float)newPacmanSpeed);
+            PacmanSpeedChanged = true;
+            newPacmanSpeed = ((JSlider) e.getSource()).getValue();
         });
 
         // Update Ghost speed
         ghostSpeedSlider.addChangeListener(e -> {
-            int newGhostSpeed = ((JSlider) e.getSource()).getValue();
-            System.out.println("New Ghost Speed: " + newGhostSpeed);
-            Ghost.setSpeed(newGhostSpeed);
+            GhostSpeedChanged = true;
+            newGhostSpeed = ((JSlider) e.getSource()).getValue();
         });
 
         // Update the map
@@ -113,6 +116,11 @@ public class Settings extends JFrame {
                 map1 = false;
                 map2 = false;
                 map3 = true;
+            }else{
+                map1 = false;
+                map2 = false;
+                map3 = false;
+                default_map = true;
             }
         });
     }
@@ -129,16 +137,31 @@ public class Settings extends JFrame {
         slider.setLabelTable(labelTable);
     }
 
-    public boolean isMap1() {
+    public static boolean isMap1() {
         return map1;
     }
 
-    public boolean isMap2() {
+    public static boolean isMap2() {
         return map2;
     }
 
-    public boolean isMap3() {
+    public static boolean isMap3() {
         return map3;
+    }
+    public static boolean isDefault_map() {
+        return default_map;
+    }
+    public static int getNewGhostSpeed(){
+        return newGhostSpeed;
+    }
+    public static int getNewPacmanSpeed(){
+        return newPacmanSpeed;
+    }
+    public static boolean isPacmanSpeedChanged(){
+        return PacmanSpeedChanged;
+    }
+    public static boolean isGhostSpeedChanged(){
+        return GhostSpeedChanged;
     }
 }
 

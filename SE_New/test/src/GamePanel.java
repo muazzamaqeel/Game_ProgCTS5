@@ -197,8 +197,4 @@ public class GamePanel extends JComponent {
             System.err.println(e);
         }
     }
-
-
-
 }
-//Test
