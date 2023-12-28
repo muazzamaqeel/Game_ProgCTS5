@@ -15,7 +15,7 @@ public class Pacman {
     //rotation angle
     private float angle = 0f;
 
-    public static final double PLAYER_SIZE = 100;
+    public static final double PLAYER_SIZE = 55;
 
     public Pacman() {
         this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();

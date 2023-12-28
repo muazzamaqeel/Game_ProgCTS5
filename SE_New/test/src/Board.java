@@ -3,9 +3,9 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Board {
-    public static final int TILE_NUMBER = 8;
-    public static final int GRID_WIDTH = 100;
-    public static final int GRID_HEIGHT = 100;
+    public static final int TILE_NUMBER = 16;
+    public static final int GRID_WIDTH = 800 / TILE_NUMBER;
+    public static final int GRID_HEIGHT = 800 / TILE_NUMBER;
     public static final int BOARD_WIDTH = TILE_NUMBER * GRID_WIDTH;
     public static final int BOARD_HEIGHT = TILE_NUMBER * GRID_HEIGHT;
 

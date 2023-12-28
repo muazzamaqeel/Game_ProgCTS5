@@ -40,9 +40,8 @@ public class Ghost {
     }
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillOval(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT);
+        g.fillOval(x, y, Board.GRID_WIDTH / 2, Board.GRID_HEIGHT / 2); // Adjust the size
     }
-
     public int getX() {
         return x;
     }
