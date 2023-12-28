@@ -68,17 +68,23 @@ public class Board {
                 int tileY = row * GRID_HEIGHT;
 
                 if (grid[row][col] == 1) {
-                    // Draw walls in black
-                    graphics2D.setColor(Color.BLACK); // Changed wall color to black
+                    // Draw walls with a dark blue gradient
+                    Color darkBlueStart = new Color(10, 30, 70); // Dark blue
+                    Color darkBlueEnd = new Color(25, 50, 100); // Slightly lighter dark blue
+                    Paint wallPaint = new GradientPaint(tileX, tileY, darkBlueStart, tileX + GRID_WIDTH, tileY + GRID_HEIGHT, darkBlueEnd);
+                    graphics2D.setPaint(wallPaint); // Set the gradient paint for walls
                     graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 } else {
-                    // Draw paths - optional; could be left as is for a white background
-                    graphics2D.setColor(Color.WHITE); // Path color
+                    // Draw paths in a lighter color for contrast
+                    Color lightPathColor = new Color(180, 200, 220); // Light blue-gray
+                    graphics2D.setColor(lightPathColor);
                     graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 }
             }
         }
     }
+
+
     // Getters and setters
     public int[][] getGrid() {
         return grid;
