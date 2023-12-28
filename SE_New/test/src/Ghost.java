@@ -17,6 +17,14 @@ public class Ghost {
         this.speed = 1;
         initializePosition();
     }
+
+    public Ghost(Board board, int startX, int startY) {
+        this.board = board;
+        this.speed = 1;
+        this.x = startX;
+        this.y = startY;
+    }
+
     private void initializePosition() {
         this.x = Board.GRID_WIDTH;
         this.y = Board.GRID_HEIGHT;

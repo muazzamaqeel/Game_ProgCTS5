@@ -69,10 +69,10 @@ public class Board {
 
                 if (grid[row][col] == 1) {
                     // Draw walls with a dark blue gradient
-                    Color darkBlueStart = new Color(10, 30, 70); // Dark blue
-                    Color darkBlueEnd = new Color(25, 50, 100); // Slightly lighter dark blue
+                    Color darkBlueStart = new Color(10, 30, 70);
+                    Color darkBlueEnd = new Color(25, 50, 100);
                     Paint wallPaint = new GradientPaint(tileX, tileY, darkBlueStart, tileX + GRID_WIDTH, tileY + GRID_HEIGHT, darkBlueEnd);
-                    graphics2D.setPaint(wallPaint); // Set the gradient paint for walls
+                    graphics2D.setPaint(wallPaint);
                     graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 } else {
                     // Draw paths in a lighter color for contrast
@@ -95,11 +95,9 @@ public class Board {
     }
 
     public boolean isRightFree(double x, double y) {
-        // Calculate the grid indices for the tiles to the right of the pacman
         int rightCol = (int) (x + GRID_WIDTH) / GRID_WIDTH;
         int topRow = (int) y / GRID_HEIGHT;
         int bottomRow = (int) (y + GRID_HEIGHT - 1) / GRID_HEIGHT;
-
         // Check if the tiles to the right are within bounds and are free paths
         return rightCol < TILE_NUMBER &&
                 grid[topRow][rightCol] == 0 &&
@@ -111,7 +109,6 @@ public class Board {
         int leftCol = (int) (x - GRID_WIDTH) / GRID_WIDTH;
         int topRow = (int) y / GRID_HEIGHT;
         int bottomRow = (int) (y + GRID_HEIGHT - 1) / GRID_HEIGHT;
-
         // Check if the tiles to the left are within bounds and are free paths
         return leftCol >= 0 &&
                 grid[topRow][leftCol] == 0 &&
@@ -123,19 +120,16 @@ public class Board {
         int leftCol = (int) x / GRID_WIDTH;
         int rightCol = (int) (x + GRID_WIDTH - 1) / GRID_WIDTH;
         int topRow = (int) (y - GRID_HEIGHT) / GRID_HEIGHT;
-
         // Check if the tiles above are within bounds and are free paths
         return topRow >= 0 &&
                 grid[topRow][leftCol] == 0 &&
                 grid[topRow][rightCol] == 0;
     }
-
     public boolean isDownFree(double x, double y) {
         // Calculate the grid indices for the tiles below the pacman
         int leftCol = (int) x / GRID_WIDTH;
         int rightCol = (int) (x + GRID_WIDTH - 1) / GRID_WIDTH;
         int bottomRow = (int) (y + GRID_HEIGHT) / GRID_HEIGHT;
-
         // Check if the tiles below are within bounds and are free paths
         return bottomRow < TILE_NUMBER &&
                 grid[bottomRow][leftCol] == 0 &&
@@ -144,8 +138,3 @@ public class Board {
 
 
 }
-
-
-
-//Test
-//Test
