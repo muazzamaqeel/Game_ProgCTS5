@@ -6,10 +6,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 public class GamePanel extends JComponent {
+    private BufferedImage offScreenBuffer;
+
     private List<Ghost> ghosts;
     private Graphics2D g2;
     private BufferedImage panel;
     private Board board;
+    private Food food; // Add this line for the Food object
+
     private int width;
     private int height;
     private Thread thread;
@@ -28,22 +32,28 @@ public class GamePanel extends JComponent {
             long startTime = 0;
             while (start) {
                 startTime = System.nanoTime();
-                drawBackground();
-                drawGame();
-                render();
 
+                // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
                     ghost.move(pacman);
                 }
+                food.checkCollisionWithPacman(pacman); // Add this line here
+
+                // Render the game
+                drawBackground();
+                drawGame();
+                render();
+
+                // Manage frame timing
                 long time = System.nanoTime() - startTime;
                 if (time < TARGET_TIME) {
                     long sleep = (TARGET_TIME - time) / 1000000;
                     sleep(sleep);
-                    //System.out.println(sleep);
                 }
             }
         });
+
 
         initObjGame();
         initUserInput();
@@ -53,6 +63,8 @@ public class GamePanel extends JComponent {
         pacman = Pacman.getInstance();
         board = new Board();
         ghosts = new ArrayList<>();
+        food = new Food(board); // Initialize the food object
+
 
         int ghostCount = 5; // Number of ghosts we want to create
         int attempts = 0; // To prevent an infinite loop
@@ -147,6 +159,9 @@ public class GamePanel extends JComponent {
         for (Ghost ghost : ghosts) {
             ghost.draw(g2);  // Draw each ghost
         }
+
+        food.draw(g2); // Add this line to draw food
+        food.drawScore(g2); // Add this line to draw score
     }
     public void render() {
         repaint();
@@ -154,8 +169,25 @@ public class GamePanel extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (panel != null) {
-            g.drawImage(panel, 0, 0, this);
+        // Initialize off-screen buffer if not already initialized
+        if (offScreenBuffer == null) {
+            offScreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+        }
+
+        // Use the buffer to draw
+        Graphics bufferGraphics = offScreenBuffer.getGraphics();
+
+        try {
+            // Render everything to the off-screen buffer
+            if (panel != null) {
+                bufferGraphics.drawImage(panel, 0, 0, this);
+            }
+
+            // Draw the off-screen buffer to the screen
+            g.drawImage(offScreenBuffer, 0, 0, this);
+        } finally {
+            // Ensure the Graphics object is always disposed
+            bufferGraphics.dispose();
         }
     }
     private void sleep(long speed) {

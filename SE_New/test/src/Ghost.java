@@ -17,7 +17,6 @@ public class Ghost {
         this.speed = 1;
         initializePosition();
     }
-
     public Ghost(Board board, int startX, int startY) {
         this.board = board;
         this.speed = 1;
