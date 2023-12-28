@@ -86,4 +86,7 @@ public class Pacman {
         this.angle = angle;
     }
 
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }

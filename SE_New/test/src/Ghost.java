@@ -8,7 +8,8 @@ public class Ghost {
     // Ghost's position
     private int x, y;
     // Ghost's speed
-    private int speed;
+    private static int speed;
+    private static Ghost ghost;
     private Board board;
 
     public Ghost(Board board) {
@@ -17,6 +18,7 @@ public class Ghost {
         this.speed = 1;
         initializePosition();
     }
+
     private void initializePosition() {
         this.x = Board.GRID_WIDTH;
         this.y = Board.GRID_HEIGHT;
@@ -45,6 +47,7 @@ public class Ghost {
         g.fillOval(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT);
     }
 
+
     public int getX() {
         return x;
     }
@@ -56,5 +59,8 @@ public class Ghost {
     }
     public void setY(int y) {
         this.y = y;
+    }
+    public static void setSpeed(int Speed) {
+        speed = Speed;
     }
 }

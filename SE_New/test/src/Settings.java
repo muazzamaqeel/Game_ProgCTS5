@@ -84,16 +84,14 @@ public class Settings extends JFrame {
         pacmanSpeedSlider.addChangeListener(e -> {
             int newPacmanSpeed = ((JSlider) e.getSource()).getValue();
             System.out.println("New Pacman Speed: " + newPacmanSpeed);
-            // Logic how to actually change is to be implemented
-//            Pacman.getInstance(). // change speed
+            Pacman.getInstance().setSpeed((float)newPacmanSpeed);
         });
 
         // Update Ghost speed
         ghostSpeedSlider.addChangeListener(e -> {
             int newGhostSpeed = ((JSlider) e.getSource()).getValue();
             System.out.println("New Ghost Speed: " + newGhostSpeed);
-            // Logic how to actually change is to be implemented
-            //same here
+            Ghost.setSpeed(newGhostSpeed);
         });
 
         // Update the map
@@ -101,12 +99,21 @@ public class Settings extends JFrame {
             String selectedMap = (String) mapOptions.getSelectedItem();
             System.out.println("Selected Map: " + selectedMap);
 
-            if ((int)mapOptions.getSelectedItem() == 1)
+            if (mapOptions.getSelectedIndex() == 0) {
                 map1 = true;
-            if ((int)mapOptions.getSelectedItem() == 2)
+                map2 = false;
+                map3 = false;
+            }
+            if (mapOptions.getSelectedIndex() == 1) {
+                map1 = false;
                 map2 = true;
-            if ((int)mapOptions.getSelectedItem() == 3)
+                map3 = false;
+            }
+            if (mapOptions.getSelectedIndex() == 2) {
+                map1 = false;
+                map2 = false;
                 map3 = true;
+            }
         });
     }
 
