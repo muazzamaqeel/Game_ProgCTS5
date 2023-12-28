@@ -65,3 +65,7 @@ public class LoadingScreen extends JDialog {
         setVisible(true);
     }
 }
+
+
+
+//Test
