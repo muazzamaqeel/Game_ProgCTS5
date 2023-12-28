@@ -5,23 +5,23 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
 public class GamePanel extends JComponent {
+    private BufferedImage offScreenBuffer;
+
     private List<Ghost> ghosts;
     private Graphics2D g2;
     private BufferedImage panel;
     private Board board;
+    private Food food; // Add this line for the Food object
+
     private int width;
     private int height;
     private Thread thread;
     private boolean start = true;
     private Pacman pacman;
-
     private UserInput userInput;
-
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
-
     public void start() {
         width = 800;
         height = 800;
@@ -32,73 +32,80 @@ public class GamePanel extends JComponent {
             long startTime = 0;
             while (start) {
                 startTime = System.nanoTime();
-                drawBackground();
-                drawGame();
-                render();
 
+                // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
                     ghost.move(pacman);
                 }
+                food.checkCollisionWithPacman(pacman); // Add this line here
+
+                // Render the game
+                drawBackground();
+                drawGame();
+                render();
+
+                // Manage frame timing
                 long time = System.nanoTime() - startTime;
                 if (time < TARGET_TIME) {
                     long sleep = (TARGET_TIME - time) / 1000000;
                     sleep(sleep);
-                    //System.out.println(sleep);
                 }
             }
         });
+
 
         initObjGame();
         initUserInput();
         thread.start();
     }
-
     public void initObjGame() {
         pacman = Pacman.getInstance();
-        board = new Board(); // Initializes the maze layout
-        ghosts = new ArrayList<>(); // Initialize the list of ghosts
+        board = new Board();
+        ghosts = new ArrayList<>();
+        food = new Food(board); // Initialize the food object
 
-        ghosts.add(new Ghost(board));
+
+        int ghostCount = 5; // Number of ghosts we want to create
+        int attempts = 0; // To prevent an infinite loop
+
+        while (ghosts.size() < ghostCount && attempts < 100) {
+            int x = (int) (Math.random() * Board.TILE_NUMBER) * Board.GRID_WIDTH;
+            int y = (int) (Math.random() * Board.TILE_NUMBER) * Board.GRID_HEIGHT;
+
+            if (board.isPath(x, y) && (x != pacman.getX() || y != pacman.getY())) {
+                ghosts.add(new Ghost(board, x, y));
+            }
+
+            attempts++;
+        }
     }
-
     public void initUserInput() {
         userInput = new UserInput();
         requestFocus();
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_A:
-                        pacman.changeAngle(180); // Left
-                        break;
-                    case KeyEvent.VK_W:
-                        pacman.changeAngle(270); // Up
-                        break;
-                    case KeyEvent.VK_D:
-                        pacman.changeAngle(0);   // Right
-                        break;
-                    case KeyEvent.VK_S:
-                        pacman.changeAngle(90);  // Down
-                        break;
+                if (e.getKeyCode() == KeyEvent.VK_A) {
+                    userInput.setKey_a(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    userInput.setKey_w(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    userInput.setKey_d(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    userInput.setKey_s(true);
                 }
             }
-
             @Override
             public void keyReleased(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_A:
-                        userInput.setKey_a(false);
-                        break;
-                    case KeyEvent.VK_W:
-                        userInput.setKey_w(false);
-                        break;
-                    case KeyEvent.VK_D:
-                        userInput.setKey_d(false);
-                        break;
-                    case KeyEvent.VK_S:
-                        userInput.setKey_s(false);
-                        break;
+                if (e.getKeyCode() == KeyEvent.VK_A) {
+                    userInput.setKey_a(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    userInput.setKey_w(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    userInput.setKey_d(false);
+                } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    userInput.setKey_s(false);
                 }
             }
         });
@@ -108,45 +115,81 @@ public class GamePanel extends JComponent {
                 while (start) {
                     float angle = pacman.getAngle();
                     if (userInput.isKey_a()) {
-                        angle -= 90;
-                    }
-                    if (userInput.isKey_d()) {
-                        angle += 90;
+                        if (board.isLeftFree(pacman.getX(), pacman.getY())) {
+                            angle = 180;
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_d()) {
+                        if (board.isRightFree(pacman.getX(), pacman.getY())) {
+                            angle = 0;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_w()) {
+                        if (board.isUpFree(pacman.getX(), pacman.getY())) {
+                            angle = 270;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
+                    } else if (userInput.isKey_s()) {
+                        if (board.isDownFree(pacman.getX(), pacman.getY())) {
+                            angle = 90;
+                            pacman.changeAngle(angle);
+                        } else {
+                            pacman.changeAngle(angle);
+                        }
                     }
                     pacman.changeAngle(angle);
-                    sleep(85);
+                    sleep(1);
                 }
             }
         }).start();
     }
-
     public void drawBackground() {
         g2.setColor(Color.DARK_GRAY);
         g2.fillRect(0, 0, width, height);
     }
-
     public void drawGame() {
         board.draw(g2);
         pacman.draw(g2);
-        // Draw each ghost
-        for (Ghost ghost : ghosts) {
-            ghost.draw(g2);
-        }
-    }
 
+        for (Ghost ghost : ghosts) {
+            ghost.draw(g2);  // Draw each ghost
+        }
+
+        food.draw(g2); // Add this line to draw food
+        food.drawScore(g2); // Add this line to draw score
+    }
     public void render() {
         repaint();
     }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (panel != null) {
-            g.drawImage(panel, 0, 0, this);
+        // Initialize off-screen buffer if not already initialized
+        if (offScreenBuffer == null) {
+            offScreenBuffer = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+        }
+
+        // Use the buffer to draw
+        Graphics bufferGraphics = offScreenBuffer.getGraphics();
+
+        try {
+            // Render everything to the off-screen buffer
+            if (panel != null) {
+                bufferGraphics.drawImage(panel, 0, 0, this);
+            }
+
+            // Draw the off-screen buffer to the screen
+            g.drawImage(offScreenBuffer, 0, 0, this);
+        } finally {
+            // Ensure the Graphics object is always disposed
+            bufferGraphics.dispose();
         }
     }
-
-
     private void sleep(long speed) {
         try {
             Thread.sleep(speed);

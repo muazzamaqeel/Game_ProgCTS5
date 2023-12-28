@@ -19,6 +19,14 @@ public class Ghost {
         initializePosition();
     }
 
+    public Ghost(Board board, int startX, int startY) {
+        this.board = board;
+        this.speed = 1;
+        this.x = startX;
+        this.y = startY;
+    }
+
+
     private void initializePosition() {
         this.x = Board.GRID_WIDTH;
         this.y = Board.GRID_HEIGHT;
@@ -40,14 +48,10 @@ public class Ghost {
             }
         }
     }
-
-    // Draw the ghost on the board
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillOval(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT);
+        g.fillOval(x, y, Board.GRID_WIDTH / 2, Board.GRID_HEIGHT / 2); // Adjust the size
     }
-
-
     public int getX() {
         return x;
     }

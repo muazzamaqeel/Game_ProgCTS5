@@ -62,9 +62,11 @@ public class HomeScreen extends JFrame {
         playBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameFrame d = new GameFrame();
-                d.setVisible(true);
                 HomeScreen.this.closeWindow();
+                LoadingScreen loadingScreen = new LoadingScreen(HomeScreen.this);
+                loadingScreen.startLoading();
+
+
             }
         });
         gbc.gridx = 1;
