@@ -16,7 +16,6 @@ public class GamePanel extends JComponent {
 
     private int width;
     private int height;
-    private Thread thread;
     private boolean start = true;
     private Pacman pacman;
     private UserInput userInput;
@@ -28,7 +27,11 @@ public class GamePanel extends JComponent {
         panel = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         g2 = panel.createGraphics();
 
-        thread = new Thread(() -> {
+        // Update game state
+        // Add this line here
+        // Render the game
+        // Manage frame timing
+        Thread thread = new Thread(() -> {
             long startTime = 0;
             while (start) {
                 startTime = System.nanoTime();
@@ -36,7 +39,7 @@ public class GamePanel extends JComponent {
                 // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
-                    ghost.move(pacman);
+                    ghost.move(ghosts, pacman);
                 }
                 food.checkCollisionWithPacman(pacman); // Add this line here
 
