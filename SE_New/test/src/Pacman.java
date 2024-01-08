@@ -40,6 +40,17 @@ public class Pacman {
         }
     }
 
+    public void speedUp() throws InterruptedException {
+        long t= System.currentTimeMillis();
+        long end = t+2000;
+        while(System.currentTimeMillis() < end) {
+            // do something
+            changeSpeed(4f);
+            // pause to avoid churning
+            Thread.sleep(1);
+        }
+        changeSpeed(2f);
+    }
 
     public void changePosition(double x, double y){
         this.x = x;
