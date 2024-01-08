@@ -56,8 +56,6 @@ public class GamePanel extends JComponent {
                 }
             }
         });
-
-
         initObjGame();
         initUserInput();
         thread.start();
