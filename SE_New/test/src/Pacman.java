@@ -52,6 +52,10 @@ public class Pacman {
         changeSpeed(2f);
     }
 
+    private void changeSpeed(float speed){
+        this.speed = speed;
+    }
+
     public void changePosition(double x, double y){
         this.x = x;
         this.y = y;

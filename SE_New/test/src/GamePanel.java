@@ -19,7 +19,7 @@ public class GamePanel extends JComponent {
     private boolean start = true;
     private Pacman pacman;
     private UserInput userInput;
-    private final int FPS = 60;
+    private final int FPS = 30;
     private final int TARGET_TIME = 1000000000 / FPS;
     public void start() {
         width = 800;
@@ -39,7 +39,7 @@ public class GamePanel extends JComponent {
                 // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
-                    ghost.move(ghosts, pacman);
+                    ghost.move(pacman);
                 }
                 food.checkCollisionWithPacman(pacman); // Add this line here
 
@@ -67,7 +67,7 @@ public class GamePanel extends JComponent {
         food = new Food(board); // Initialize the food object
 
 
-        int ghostCount = 5; // Number of ghosts we want to create
+        int ghostCount = 3; // Number of ghosts we want to create
         int attempts = 0; // To prevent an infinite loop
 
         while (ghosts.size() < ghostCount && attempts < 100) {
