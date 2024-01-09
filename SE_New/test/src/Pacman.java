@@ -16,6 +16,7 @@ public class Pacman {
     private float angle = 0f;
 
     public static final double PLAYER_SIZE = 50;
+    private float targetX, targetY;
 
     public Pacman() {
         this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();
@@ -27,6 +28,12 @@ public class Pacman {
         }
         this.x = (double) Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
         this.y = (Board.TILE_NUMBER - 2) * Board.GRID_HEIGHT;
+    }
+
+
+    public void moveTowardsTarget() {
+        x += (targetX - x) * speed;
+        y += (targetY - y) * speed;
     }
 
     public void move(Board board) {

@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class LoadingScreen extends JDialog {
     private JProgressBar progressBar;
     private Timer timer;
-    private int count = 0;
+    private int count = 90;
     private JLabel loadingLabel;
 
     public LoadingScreen(JFrame parent) {

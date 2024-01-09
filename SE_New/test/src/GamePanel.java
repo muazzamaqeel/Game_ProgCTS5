@@ -19,7 +19,7 @@ public class GamePanel extends JComponent {
     private boolean start = true;
     private Pacman pacman;
     private UserInput userInput;
-    private final int FPS = 30;
+    private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
     public void start() {
         width = 800;
@@ -62,7 +62,7 @@ public class GamePanel extends JComponent {
     }
     public void initObjGame() {
         pacman = Pacman.getInstance();
-        board = new Board();
+        board = new Board(this); // Pass 'this' reference
         ghosts = new ArrayList<>();
         food = new Food(board); // Initialize the food object
 
@@ -198,4 +198,39 @@ public class GamePanel extends JComponent {
             System.err.println(e);
         }
     }
+
+    public void showGameOver() {
+        // Stop the game loop
+        start = false;
+
+        // Create and display the game over window
+        JDialog gameOverDialog = new JDialog();
+        gameOverDialog.setTitle("Game Over");
+        gameOverDialog.setSize(300, 200);
+        gameOverDialog.setLayout(new BorderLayout());
+        gameOverDialog.setLocationRelativeTo(null);
+        gameOverDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Ensure the dialog closes on exit
+
+        JLabel scoreLabel = new JLabel("Your Score: " + food.getScore());
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gameOverDialog.add(scoreLabel, BorderLayout.CENTER);
+
+        JButton homeButton = new JButton("Back to Home");
+        homeButton.addActionListener(e -> {
+            gameOverDialog.dispose();
+            // Get the top-level window ancestor of this GamePanel to close it
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose(); // Close the main game window
+            }
+            // Optionally, you can show the home screen here if needed
+            new HomeScreen().setVisible(true);
+        });
+        gameOverDialog.add(homeButton, BorderLayout.SOUTH);
+
+        gameOverDialog.setVisible(true);
+    }
+
+
+
 }

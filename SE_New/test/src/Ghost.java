@@ -59,10 +59,22 @@ public class Ghost {
         this.y = Board.GRID_HEIGHT;
     }
 
+    private boolean collidesWithPacman(Pacman pacman) {
+        Rectangle ghostBounds = new Rectangle(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT);
+        Rectangle pacmanBounds = new Rectangle((int) pacman.getX(), (int) pacman.getY(), (int) Pacman.PLAYER_SIZE, (int) Pacman.PLAYER_SIZE);
+        return ghostBounds.intersects(pacmanBounds);
+    }
+
+
+
     //Ghost moving AI
     public void move(Pacman pacman) {
         List<Point> allPaths = calculateMostEfficientPath(pacman);
         List<Point> mostEfficientPath = findMostEfficientPath(Collections.singletonList(allPaths), pacman);
+
+        if (collidesWithPacman(pacman)) {
+            board.triggerGameOver(); // This method needs to be implemented in Board class
+        }
 
         if (mostEfficientPath != null && !mostEfficientPath.isEmpty()) {
             Point nextPosition = mostEfficientPath.get(0);
@@ -73,6 +85,7 @@ public class Ghost {
                 targetY = nextPosition.getY();
                 lastVisitedTile = new Point(x, y);  // Update the last visited tile
             }
+
         }
 
         double dx = targetX - currentX;
@@ -91,6 +104,8 @@ public class Ghost {
             x = (int) Math.round(currentX);
             y = (int) Math.round(currentY);
         }
+
+
     }
 
     private List<Point> calculateMostEfficientPath(Pacman pacman) {
@@ -247,6 +262,14 @@ public class Ghost {
 
         // Draw the ghost image with adjusted size
         graphics2D.drawImage(ghost_image, x, y, ghostWidth, ghostHeight, null);
+
+        //Debug
+        //graphics2D.draw(new Rectangle2D.Double(x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT)); // Ghost bounding box
+        //graphics2D.draw(new Rectangle2D.Double(pacman.getX(), pacman.getY(), Pacman.PLAYER_SIZE, Pacman.PLAYER_SIZE)); // Pacman bounding box
+        // Draw the ghost image with adjusted size
+        //graphics2D.drawImage(ghost_image, x, y, Board.GRID_WIDTH, Board.GRID_HEIGHT, null);
+
+
     }
     public int getX() {
         return x;

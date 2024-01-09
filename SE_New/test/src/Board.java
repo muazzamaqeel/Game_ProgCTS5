@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.io.*;
-import java.util.Scanner;
 
 public class Board {
     public static final int TILE_NUMBER = 16;
@@ -8,10 +7,12 @@ public class Board {
     public static final int GRID_HEIGHT = 800 / TILE_NUMBER;
     public static final int BOARD_WIDTH = TILE_NUMBER * GRID_WIDTH;
     public static final int BOARD_HEIGHT = TILE_NUMBER * GRID_HEIGHT;
+    private GamePanel gamePanel; // Reference to GamePanel
 
     private int[][] grid;
 
-    public Board() {
+    public Board(GamePanel gamePanel) {
+        this.gamePanel = gamePanel; // Correct assignment
         // Initialize the grid...
         grid = new int[TILE_NUMBER][TILE_NUMBER];
 
@@ -146,6 +147,13 @@ public class Board {
         return bottomRow < TILE_NUMBER &&
                 grid[bottomRow][leftCol] == 0 &&
                 grid[bottomRow][rightCol] == 0;
+    }
+
+    public void triggerGameOver() {
+        // Call showGameOver on the GamePanel instance
+        if (gamePanel != null) {
+            gamePanel.showGameOver();
+        }
     }
 
 
