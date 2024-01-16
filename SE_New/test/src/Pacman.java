@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Pacman {
     //image for pacman
     private final Image pacman_close_mouth;
-    private static Pacman pacman;
+    static Pacman pacman;
 
     //coordinates
     private double x,y;

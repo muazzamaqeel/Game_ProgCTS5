@@ -62,7 +62,7 @@ public class GamePanel extends JComponent {
     }
     public void initObjGame() {
         pacman = Pacman.getInstance();
-        board = new Board(this); // Pass 'this' reference
+        board = new Board(this);// Pass 'this' reference
         ghosts = new ArrayList<>();
         food = new Food(board); // Initialize the food object
 
@@ -115,27 +115,27 @@ public class GamePanel extends JComponent {
             public void run() {
                 while (start) {
                     float angle = pacman.getAngle();
-                    if (userInput.isKey_a()) {
+                    if (UserInput.isKey_a()) {
                         if (board.isLeftFree(pacman.getX(), pacman.getY())) {
                             angle = 180;
                         } else {
                             pacman.changeAngle(angle);
                         }
-                    } else if (userInput.isKey_d()) {
+                    } else if (UserInput.isKey_d()) {
                         if (board.isRightFree(pacman.getX(), pacman.getY())) {
                             angle = 0;
                             pacman.changeAngle(angle);
                         } else {
                             pacman.changeAngle(angle);
                         }
-                    } else if (userInput.isKey_w()) {
+                    } else if (UserInput.isKey_w()) {
                         if (board.isUpFree(pacman.getX(), pacman.getY())) {
                             angle = 270;
                             pacman.changeAngle(angle);
                         } else {
                             pacman.changeAngle(angle);
                         }
-                    } else if (userInput.isKey_s()) {
+                    } else if (UserInput.isKey_s()) {
                         if (board.isDownFree(pacman.getX(), pacman.getY())) {
                             angle = 90;
                             pacman.changeAngle(angle);

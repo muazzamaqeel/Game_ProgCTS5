@@ -18,6 +18,9 @@ public class Ghost {
     private double currentX, currentY;
     private double targetX, targetY;
 
+    private long lastPathUpdateTime = 0;
+    private long pathUpdateInterval = 1000; // Update path every 1000 milliseconds
+
 
     public Ghost(Board board, int startX, int startY) {
         if(amount_of_ghosts == 0){
@@ -43,9 +46,9 @@ public class Ghost {
 
         this.board = board;
         if(Settings.isGhostSpeedChanged()){
-            this.speed = Settings.getNewGhostSpeed();
+            speed = Settings.getNewGhostSpeed();
         } else {
-            this.speed = 1;
+            speed = 1;
         }
         this.x = startX;
         this.y = startY;
@@ -69,43 +72,61 @@ public class Ghost {
 
     //Ghost moving AI
     public void move(Pacman pacman) {
-        List<Point> allPaths = calculateMostEfficientPath(pacman);
-        List<Point> mostEfficientPath = findMostEfficientPath(Collections.singletonList(allPaths), pacman);
-
-        if (collidesWithPacman(pacman)) {
-            board.triggerGameOver(); // This method needs to be implemented in Board class
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastPathUpdateTime > pathUpdateInterval) {
+            lastPathUpdateTime = currentTime;
+            // Only calculate the path every interval, instead of every frame
+            updateTargetPosition(pacman);
         }
 
-        if (mostEfficientPath != null && !mostEfficientPath.isEmpty()) {
-            Point nextPosition = mostEfficientPath.get(0);
+        // Use the updated target position to move the ghost
+        moveToTarget();
+    }
 
-            // Check if the next position is the last visited tile
-            if (!nextPosition.equals(lastVisitedTile)) {
-                targetX = nextPosition.getX();
-                targetY = nextPosition.getY();
-                lastVisitedTile = new Point(x, y);  // Update the last visited tile
-            }
 
-        }
+    private void updateTargetPosition(Pacman pacman) {
+        // Simplified targeting: Directly set the Pacman's current position as the target
+        targetX = pacman.getX();
+        targetY = pacman.getY();
+    }
 
+    private void moveToTarget() {
+        // Calculate the next step towards the target
         double dx = targetX - currentX;
         double dy = targetY - currentY;
         double distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance > 0) {
+        if (distance > 1) { // Use a threshold to avoid jitter when the ghost is close to the target
             double speedX = (dx / distance) * speed;
             double speedY = (dy / distance) * speed;
 
-            // Update the current position without rounding
-            currentX += speedX;
-            currentY += speedY;
+            // Proposed new position
+            double newX = currentX + speedX;
+            double newY = currentY + speedY;
 
-            // Round the final positions
+            // Check if the new position is within a path
+            if (board.isPath(newX, newY)) {
+                currentX = newX;
+                currentY = newY;
+            } else {
+                // If not a path, try to move vertically or horizontally only
+
+                if (board.isPath(currentX + speedX, currentY)) {
+                    currentX += speedX;
+                } else if (board.isPath(currentX, currentY + speedY)) {
+                    currentY += speedY;
+                }
+            }
+
+            // Round the final positions to move to the nearest tile
             x = (int) Math.round(currentX);
             y = (int) Math.round(currentY);
         }
 
-
+    // Collision with Pacman should still be checked each frame
+        if (collidesWithPacman(Pacman.pacman)) {
+            board.triggerGameOver();
+        }
     }
 
     private List<Point> calculateMostEfficientPath(Pacman pacman) {
