@@ -24,7 +24,7 @@ public class Board {
             throw new RuntimeException(e);
         }
         Pacman pacman = Pacman.getInstance();
-        pacman.changePosition((double) TILE_NUMBER / 2 * GRID_WIDTH, (TILE_NUMBER - 2) * GRID_HEIGHT);
+        pacman.changePosition( TILE_NUMBER / 2 * GRID_WIDTH, (TILE_NUMBER - 2) * GRID_HEIGHT);
     }
 
     public boolean isPath(double x, double y) {
@@ -46,15 +46,15 @@ public class Board {
         File file = new File("");
 
         if(Settings.isMap1()){
-            file = new File("src/game/maps/maze1.txt");
+            file = new File("SE_New/test/src/game/maps/maze1.txt");
         }
         if(Settings.isMap2()){
-            file = new File("src/game/maps/maze2.txt");
+            file = new File("SE_New/test/src/game/maps/maze2.txt");
         }
         if(Settings.isMap3()){
-            file = new File("src/game/maps/maze3.txt");
+            file = new File("SE_New/test/src/game/maps/maze3.txt");
         }else{
-            file = new File("src/game/maps/default_maze.txt");
+            file = new File("SE_New/test/src/game/maps/default_maze.txt");
         }
         if (!file.exists()) {
             throw new IOException("File not found: src/game/maps/maze.txt");

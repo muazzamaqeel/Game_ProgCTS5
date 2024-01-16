@@ -3,6 +3,15 @@ public class UserInput {
     private static boolean key_w;
     private static boolean key_d;
     private static boolean key_s;
+    private boolean doublePress;
+
+    public void setDoublePress(boolean doublePress) {
+        this.doublePress = doublePress;
+    }
+
+    public boolean isDoublePress() {
+        return doublePress;
+    }
 
     public static boolean isKey_a() {
         return key_a;

@@ -85,27 +85,62 @@ public class GamePanel extends JComponent {
         userInput = new UserInput();
         requestFocus();
         addKeyListener(new KeyAdapter() {
+            private long lastPressTime = 0;
+            private static final long DOUBLE_PRESS_INTERVAL = 300;
+            boolean isWKeyPressed = false;
+            boolean isAKeyPressed = false;
+            boolean isDKeyPressed = false;
+            boolean isSKeyPressed = false;
+
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_A) {
                     userInput.setKey_a(true);
+                    long currentTime = System.currentTimeMillis();
+                    if (!isAKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        new Thread(() -> pacman.speedUp()).start();
+                    }
+                    lastPressTime = currentTime;
+                    isAKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_W) {
                     userInput.setKey_w(true);
+                    long currentTime = System.currentTimeMillis();
+                    if (!isWKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        new Thread(() -> pacman.speedUp()).start();
+                    }
+                    lastPressTime = currentTime;
+                    isWKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_D) {
                     userInput.setKey_d(true);
+                    long currentTime = System.currentTimeMillis();
+                    if (!isDKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        new Thread(() -> pacman.speedUp()).start();
+                    }
+                    lastPressTime = currentTime;
+                    isDKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_S) {
                     userInput.setKey_s(true);
+                    long currentTime = System.currentTimeMillis();
+                    if (!isSKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                        new Thread(() -> pacman.speedUp()).start();
+                    }
+                    lastPressTime = currentTime;
+                    isSKeyPressed = true;
                 }
             }
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_A) {
+                    isAKeyPressed = false;
                     userInput.setKey_a(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    isWKeyPressed = false;
                     userInput.setKey_w(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    isDKeyPressed = false;
                     userInput.setKey_d(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    isSKeyPressed = false;
                     userInput.setKey_s(false);
                 }
             }

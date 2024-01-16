@@ -9,7 +9,7 @@ public class Pacman {
     static Pacman pacman;
 
     //coordinates
-    private double x,y;
+    private int x,y;
     private float speed;
 
     //rotation angle
@@ -26,7 +26,7 @@ public class Pacman {
         }else{
             this.speed = 2f;
         }
-        this.x = (double) Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
+        this.x =  Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
         this.y = (Board.TILE_NUMBER - 2) * Board.GRID_HEIGHT;
     }
 
@@ -37,33 +37,46 @@ public class Pacman {
     }
 
     public void move(Board board) {
+        //int out = (int) (Math.round(in / 50.0) * 50);
         double nextX = x + speed * Math.cos(Math.toRadians(angle));
         double nextY = y + speed * Math.sin(Math.toRadians(angle));
 
         // Check if the next position is within a path
-        if (board.isPath(nextX, nextY)) {
-            x = nextX;
-            y = nextY;
+        if (board.isPath((int)Math.round(nextX / 2)*2, (int)Math.round(nextY / 2)*2)) {
+            x = (int)Math.round(nextX / 2)*2;
+            y = (int)Math.round(nextY / 2)*2;;
         }
     }
 
-    public void speedUp() throws InterruptedException {
-        long t= System.currentTimeMillis();
-        long end = t+2000;
-        while(System.currentTimeMillis() < end) {
-            // do something
-            changeSpeed(4f);
-            // pause to avoid churning
-            Thread.sleep(1);
-        }
-        changeSpeed(2f);
+    public void speedUp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long t = System.currentTimeMillis();
+                long end = t + 2000;
+
+                while (System.currentTimeMillis() < end) {
+                    // do something
+                    changeSpeed(4f);
+                    // pause to avoid churning
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // After 2 seconds, revert to normal speed
+                changeSpeed(2f);
+            }
+        }).start();
     }
 
-    private void changeSpeed(float speed){
+    public void changeSpeed(float speed){
         this.speed = speed;
     }
 
-    public void changePosition(double x, double y){
+    public void changePosition(int x, int y){
         this.x = x;
         this.y = y;
     }
@@ -100,11 +113,11 @@ public class Pacman {
         return angle;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
