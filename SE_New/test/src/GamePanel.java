@@ -86,7 +86,7 @@ public class GamePanel extends JComponent {
         requestFocus();
         addKeyListener(new KeyAdapter() {
             private long lastPressTime = 0;
-            private static final long DOUBLE_PRESS_INTERVAL = 300;
+            private static final long DOUBLE_PRESS_INTERVAL = 400;
             boolean isWKeyPressed = false;
             boolean isAKeyPressed = false;
             boolean isDKeyPressed = false;
