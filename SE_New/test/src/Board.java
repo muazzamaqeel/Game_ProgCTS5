@@ -42,22 +42,56 @@ public class Board {
                 grid[bottomRow][rightCol] == 0;
     }
 
-    private void initializeMaze() throws IOException {
-        File file = new File("");
+    //old implementation with incorrect logic handling (Nikolai is to blame worst case scenario)
+//    private void initializeMaze() throws IOException {
+//        File file = new File("");
+//
+//        if(Settings.isDefault_map()){
+//            file = new File("src/game/maps/default_maze.txt");
+//        }
+//        if(Settings.isMap1()){
+//            file = new File("src/game/maps/maze1.txt");
+//        }
+//        if(Settings.isMap2()){
+//            file = new File("src/game/maps/maze2.txt");
+//        }
+//        if(Settings.isMap3()){
+//            file = new File("src/game/maps/maze3.txt");
+//        }else{
+//            file = new File("src/game/maps/default_maze.txt");
+//        }
+//        if (!file.exists()) {
+//            throw new IOException("File not found: src/game/maps/maze.txt");
+//        }
+//
+//        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+//            String line;
+//            int row = 0;
+//            while ((line = reader.readLine()) != null && row < TILE_NUMBER) {
+//                for (int col = 0; col < TILE_NUMBER && col < line.length(); col++) {
+//                    grid[row][col] = Character.getNumericValue(line.charAt(col));
+//                }
+//                row++;
+//            }
+//        }
+//    }
 
-        if(Settings.isMap1()){
+    private void initializeMaze() throws IOException {
+        File file;
+
+        if (Settings.isMap1()) {
             file = new File("src/game/maps/maze1.txt");
-        }
-        if(Settings.isMap2()){
+        } else if (Settings.isMap2()) {
             file = new File("src/game/maps/maze2.txt");
-        }
-        if(Settings.isMap3()){
+        } else if (Settings.isMap3()) {
             file = new File("src/game/maps/maze3.txt");
-        }else{
+        } else {
+            // Default to the default map if none of the specific maps are selected
             file = new File("src/game/maps/default_maze.txt");
         }
+
         if (!file.exists()) {
-            throw new IOException("File not found: src/game/maps/maze.txt");
+            throw new IOException("File not found: " + file.getPath());
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -71,6 +105,7 @@ public class Board {
             }
         }
     }
+
     public void draw(Graphics2D graphics2D) {
         // Define colors for Map 2
         Color darkGreen = new Color(0, 100, 0); // Dark green for walls
