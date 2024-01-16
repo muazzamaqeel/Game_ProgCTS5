@@ -27,11 +27,11 @@ public class Food {
 
     private static class FoodItem {
         Point position;
-        BufferedImage image;
+        int imageType;
 
-        FoodItem(Point position, BufferedImage image) {
+        FoodItem(Point position, int imageType) {
             this.position = position;
-            this.image = image;
+            this.imageType = imageType;
         }
     }
 
@@ -41,7 +41,7 @@ public class Food {
             foodImage2 = ImageIO.read(Objects.requireNonNull(getClass().getResource("/game/images/food/food2.png")));
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error by providing feedback or exiting
+            // Handle the error
         }
     }
 
@@ -53,8 +53,8 @@ public class Food {
                 if (grid[row][col] == 0) {
                     int xCenter = (col * Board.GRID_WIDTH) + (Board.GRID_WIDTH / 2);
                     int yCenter = (row * Board.GRID_HEIGHT) + (Board.GRID_HEIGHT / 2);
-                    BufferedImage foodImage = (row + col) % 2 == 0 ? foodImage1 : foodImage2;
-                    foodItems.add(new FoodItem(new Point(xCenter, yCenter), foodImage));
+                    int imageType = (row + col) % 2;
+                    foodItems.add(new FoodItem(new Point(xCenter, yCenter), imageType));
                 }
             }
         }
@@ -64,7 +64,8 @@ public class Food {
         for (FoodItem foodItem : foodItems) {
             int drawX = foodItem.position.x - FOOD_WIDTH / 2;
             int drawY = foodItem.position.y - FOOD_HEIGHT / 2;
-            g2.drawImage(foodItem.image, drawX, drawY, FOOD_WIDTH, FOOD_HEIGHT, null);
+            BufferedImage foodImage = foodItem.imageType == 0 ? foodImage1 : foodImage2;
+            g2.drawImage(foodImage, drawX, drawY, FOOD_WIDTH, FOOD_HEIGHT, null);
         }
     }
 
@@ -79,7 +80,6 @@ public class Food {
             return false;
         });
     }
-
     public void drawScore(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 20));
