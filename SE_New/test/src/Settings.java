@@ -106,23 +106,21 @@ public class Settings extends JFrame {
                 map1 = true;
                 map2 = false;
                 map3 = false;
-            }
-            if (mapOptions.getSelectedIndex() == 1) {
+            } else if (mapOptions.getSelectedIndex() == 1) {
                 map1 = false;
                 map2 = true;
                 map3 = false;
-            }
-            if (mapOptions.getSelectedIndex() == 2) {
+            } else if (mapOptions.getSelectedIndex() == 2) {
                 map1 = false;
                 map2 = false;
                 map3 = true;
-            }else{
+            } else {
                 map1 = false;
                 map2 = false;
                 map3 = false;
-                default_map = true;
             }
         });
+
     }
 
     private void configureSlider(JSlider slider) {
@@ -147,9 +145,6 @@ public class Settings extends JFrame {
 
     public static boolean isMap3() {
         return map3;
-    }
-    public static boolean isDefault_map() {
-        return default_map;
     }
     public static int getNewGhostSpeed(){
         return newGhostSpeed;

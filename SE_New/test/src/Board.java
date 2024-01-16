@@ -56,6 +56,7 @@ public class Board {
         }else{
             file = new File("SE_New/test/src/game/maps/default_maze.txt");
         }
+
         if (!file.exists()) {
             throw new IOException("File not found: src/game/maps/maze.txt");
         }
@@ -71,6 +72,7 @@ public class Board {
             }
         }
     }
+
     public void draw(Graphics2D graphics2D) {
         // Define colors for Map 2
         Color darkGreen = new Color(0, 100, 0); // Dark green for walls
