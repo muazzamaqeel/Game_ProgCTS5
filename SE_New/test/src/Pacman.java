@@ -6,21 +6,29 @@ import java.util.Objects;
 public class Pacman {
     //image for pacman
     private final Image pacman_close_mouth;
+    private final Image pacman_open_mout;
+    private final Image pacman_left_close_mouth;
+    private final Image pacman_left_open_mout;
     static Pacman pacman;
 
     //coordinates
     private int x,y;
     private float speed;
+    private int closedX, openedX, closedY, openedY;
+    private boolean mouthOpen = false;
+    private int mouthCounter = 0;
 
     //rotation angle
     private float angle = 0f;
 
     public static final double PLAYER_SIZE = 50;
-    private float targetX, targetY;
+    //private float targetX, targetY;
 
     public Pacman() {
-        this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();
-        Image pacman_open_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-5.png"))).getImage();
+        this.pacman_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-2.png"))).getImage();
+        this.pacman_open_mout = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-3.png"))).getImage();
+        this.pacman_left_close_mouth = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0.png"))).getImage();
+        this.pacman_left_open_mout = new ImageIcon(Objects.requireNonNull(getClass().getResource("game/images/pixil-frame-0-4.png"))).getImage();
         if(Settings.isPacmanSpeedChanged()){
             this.speed = (float)Settings.getNewPacmanSpeed();
         }else{
@@ -28,23 +36,35 @@ public class Pacman {
         }
         this.x =  Board.TILE_NUMBER / 2 * Board.GRID_WIDTH;
         this.y = (Board.TILE_NUMBER - 2) * Board.GRID_HEIGHT;
+        closedX = this.x;
+        closedY = this.y;
     }
 
 
-    public void moveTowardsTarget() {
+    /*public void moveTowardsTarget() {
         x += (targetX - x) * speed;
         y += (targetY - y) * speed;
-    }
+    }*/
 
     public void move(Board board) {
-        //int out = (int) (Math.round(in / 50.0) * 50);
         double nextX = x + speed * Math.cos(Math.toRadians(angle));
         double nextY = y + speed * Math.sin(Math.toRadians(angle));
 
         // Check if the next position is within a path
-        if (board.isPath((int)Math.round(nextX / 2)*2, (int)Math.round(nextY / 2)*2)) {
-            x = (int)Math.round(nextX / 2)*2;
-            y = (int)Math.round(nextY / 2)*2;;
+        if (board.isPath((int) Math.round(nextX / 2) * 2, (int) Math.round(nextY / 2) * 2)) {
+            x = (int) Math.round(nextX / 2) * 2;
+            y = (int) Math.round(nextY / 2) * 2;
+
+            // Increment the mouth counter
+            mouthCounter++;
+
+            // Check if Pacman has traversed 25 pixels
+            if (mouthCounter >= 20) {
+                // Switch between open and closed mouth
+                mouthOpen = !mouthOpen;
+                // Reset the counter
+                mouthCounter = 0;
+            }
         }
     }
 
@@ -92,12 +112,26 @@ public class Pacman {
         return Pacman.pacman;
     }
 
-    public void draw(Graphics2D graphics2D){
+    public void draw(Graphics2D graphics2D) {
         AffineTransform oldTransformation = graphics2D.getTransform();
         graphics2D.translate(x, y);
         AffineTransform rotation = new AffineTransform();
-        rotation.rotate(Math.toRadians(angle), PLAYER_SIZE/2, PLAYER_SIZE/2);
-        graphics2D.drawImage(pacman_close_mouth, rotation,null);
+        rotation.rotate(Math.toRadians(angle), PLAYER_SIZE / 2, PLAYER_SIZE / 2);
+
+        if (mouthOpen) {
+            if (angle != 180) {
+                graphics2D.drawImage(pacman_open_mout, rotation, null);
+            } else{
+                graphics2D.drawImage(pacman_left_open_mout, null, null);
+            }
+        } else {
+            if (angle != 180) {
+                graphics2D.drawImage(pacman_close_mouth, rotation, null);
+            }else{
+                graphics2D.drawImage(pacman_left_close_mouth, null, null);
+            }
+        }
+
         graphics2D.setTransform(oldTransformation);
     }
 

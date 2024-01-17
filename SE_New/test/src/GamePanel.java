@@ -43,13 +43,13 @@ public class GamePanel extends JComponent {
             while (start) {
                 startTime = System.nanoTime();
                 if (clip == null || !introPlayed) {
-                    if (!introPlayed) {
+                    if (!introPlayed) { //SE_New/test/
                         playAudio("src/game/music/RuinsArea(Maze-Intro).wav");
                         introPlayed = true;
                     }
                 }
                 if (!clip.isRunning()) {
-                    playAudio("src/game/music/AnubisRex(Re-Pac).wav");
+                    playAudio("test/src/game/music/AnubisRex(Re-Pac).wav");
                 }
                 // Update game state
                 pacman.move(board);
@@ -247,7 +247,7 @@ public class GamePanel extends JComponent {
     public void showGameOver() {
         // Stop the game loop
         start = false;
-        playAudio("SE_New/test/src/game/music/pacman_death.wav");
+        playAudio("src/game/music/pacman_death.wav");
 
         // Create and display the game over window
         JDialog gameOverDialog = new JDialog();

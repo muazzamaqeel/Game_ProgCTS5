@@ -49,7 +49,7 @@ public class Board {
     private void initializeMaze() throws IOException {
         File file = new File("");
 
-        if(Settings.isMap1()){
+        if(Settings.isMap1()){  //SE_New/test/
             file = new File("src/game/maps/maze1.txt");
         }
         if(Settings.isMap2()){
