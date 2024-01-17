@@ -1,8 +1,12 @@
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 public class GamePanel extends JComponent {
@@ -13,6 +17,7 @@ public class GamePanel extends JComponent {
     private BufferedImage panel;
     private Board board;
     private Food food; // Add this line for the Food object
+    private Clip clip;
 
     private int width;
     private int height;
@@ -21,6 +26,8 @@ public class GamePanel extends JComponent {
     private UserInput userInput;
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
+    boolean introPlayed = false;
+
     public void start() {
         width = 800;
         height = 800;
@@ -35,7 +42,15 @@ public class GamePanel extends JComponent {
             long startTime = 0;
             while (start) {
                 startTime = System.nanoTime();
-
+                if (clip == null || !introPlayed) {
+                    if (!introPlayed) {
+                        playAudio("src/game/music/RuinsArea(Maze-Intro).wav");
+                        introPlayed = true;
+                    }
+                }
+                if (!clip.isRunning()) {
+                    playAudio("src/game/music/AnubisRex(Re-Pac).wav");
+                }
                 // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
@@ -60,6 +75,20 @@ public class GamePanel extends JComponent {
         initUserInput();
         thread.start();
     }
+
+    private void playAudio(String filePath) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+            if (clip!=null)
+                clip.stop();
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void initObjGame() {
         pacman = Pacman.getInstance();
         board = new Board(this);// Pass 'this' reference
@@ -87,100 +116,77 @@ public class GamePanel extends JComponent {
         addKeyListener(new KeyAdapter() {
             private long lastPressTime = 0;
             private static final long DOUBLE_PRESS_INTERVAL = 400;
-            boolean isWKeyPressed = false;
-            boolean isAKeyPressed = false;
-            boolean isDKeyPressed = false;
-            boolean isSKeyPressed = false;
+            boolean isSpaceKeyPressed = false;
 
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_A) {
                     userInput.setKey_a(true);
-                    long currentTime = System.currentTimeMillis();
-                    if (!isAKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                        new Thread(() -> pacman.speedUp()).start();
-                    }
-                    lastPressTime = currentTime;
-                    isAKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_W) {
                     userInput.setKey_w(true);
-                    long currentTime = System.currentTimeMillis();
-                    if (!isWKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                        new Thread(() -> pacman.speedUp()).start();
-                    }
-                    lastPressTime = currentTime;
-                    isWKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_D) {
                     userInput.setKey_d(true);
-                    long currentTime = System.currentTimeMillis();
-                    if (!isDKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                        new Thread(() -> pacman.speedUp()).start();
-                    }
-                    lastPressTime = currentTime;
-                    isDKeyPressed = true;
                 } else if (e.getKeyCode() == KeyEvent.VK_S) {
                     userInput.setKey_s(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                    userInput.setKey_space(true);
                     long currentTime = System.currentTimeMillis();
-                    if (!isSKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                    if (!isSpaceKeyPressed && currentTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
                         new Thread(() -> pacman.speedUp()).start();
                     }
                     lastPressTime = currentTime;
-                    isSKeyPressed = true;
+                    isSpaceKeyPressed = true;
                 }
             }
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_A) {
-                    isAKeyPressed = false;
                     userInput.setKey_a(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_W) {
-                    isWKeyPressed = false;
                     userInput.setKey_w(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_D) {
-                    isDKeyPressed = false;
                     userInput.setKey_d(false);
                 } else if (e.getKeyCode() == KeyEvent.VK_S) {
-                    isSKeyPressed = false;
                     userInput.setKey_s(false);
+                } else if ( e.getKeyCode() == KeyEvent.VK_SPACE){
+                    isSpaceKeyPressed = false;
+                    userInput.setKey_space(false);
                 }
             }
         });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (start) {
-                    float angle = pacman.getAngle();
-                    if (UserInput.isKey_a()) {
-                        if (board.isLeftFree(pacman.getX(), pacman.getY())) {
-                            angle = 180;
-                        } else {
-                            pacman.changeAngle(angle);
-                        }
-                    } else if (UserInput.isKey_d()) {
-                        if (board.isRightFree(pacman.getX(), pacman.getY())) {
-                            angle = 0;
-                            pacman.changeAngle(angle);
-                        } else {
-                            pacman.changeAngle(angle);
-                        }
-                    } else if (UserInput.isKey_w()) {
-                        if (board.isUpFree(pacman.getX(), pacman.getY())) {
-                            angle = 270;
-                            pacman.changeAngle(angle);
-                        } else {
-                            pacman.changeAngle(angle);
-                        }
-                    } else if (UserInput.isKey_s()) {
-                        if (board.isDownFree(pacman.getX(), pacman.getY())) {
-                            angle = 90;
-                            pacman.changeAngle(angle);
-                        } else {
-                            pacman.changeAngle(angle);
-                        }
+        new Thread(() -> {
+            while (start) {
+                float angle = pacman.getAngle();
+                if (UserInput.isKey_a()) {
+                    if (board.isLeftFree(pacman.getX(), pacman.getY())) {
+                        angle = 180;
+                    } else {
+                        pacman.changeAngle(angle);
                     }
-                    pacman.changeAngle(angle);
-                    sleep(1);
+                } else if (UserInput.isKey_d()) {
+                    if (board.isRightFree(pacman.getX(), pacman.getY())) {
+                        angle = 0;
+                        pacman.changeAngle(angle);
+                    } else {
+                        pacman.changeAngle(angle);
+                    }
+                } else if (UserInput.isKey_w()) {
+                    if (board.isUpFree(pacman.getX(), pacman.getY())) {
+                        angle = 270;
+                        pacman.changeAngle(angle);
+                    } else {
+                        pacman.changeAngle(angle);
+                    }
+                } else if (UserInput.isKey_s()) {
+                    if (board.isDownFree(pacman.getX(), pacman.getY())) {
+                        angle = 90;
+                        pacman.changeAngle(angle);
+                    } else {
+                        pacman.changeAngle(angle);
+                    }
                 }
+                pacman.changeAngle(angle);
+                sleep(1);
             }
         }).start();
     }
@@ -189,7 +195,11 @@ public class GamePanel extends JComponent {
         g2.fillRect(0, 0, width, height);
     }
     public void drawGame() {
-        board.draw(g2);
+        try {
+            board.draw(g2);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         pacman.draw(g2);
 
         for (Ghost ghost : ghosts) {
@@ -237,6 +247,7 @@ public class GamePanel extends JComponent {
     public void showGameOver() {
         // Stop the game loop
         start = false;
+        playAudio("SE_New/test/src/game/music/pacman_death.wav");
 
         // Create and display the game over window
         JDialog gameOverDialog = new JDialog();
@@ -259,7 +270,9 @@ public class GamePanel extends JComponent {
                 window.dispose(); // Close the main game window
             }
             // Optionally, you can show the home screen here if needed
+
             new HomeScreen().setVisible(true);
+
         });
         gameOverDialog.add(homeButton, BorderLayout.SOUTH);
 

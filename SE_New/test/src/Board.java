@@ -1,5 +1,9 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Objects;
 
 public class Board {
     public static final int TILE_NUMBER = 16;
@@ -73,7 +77,7 @@ public class Board {
         }
     }
 
-    public void draw(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D) throws IOException {
         // Define colors for Map 2
         Color darkGreen = new Color(0, 100, 0); // Dark green for walls
         Color lightGreen = new Color(144, 238, 144); // Light green for paths
@@ -81,6 +85,9 @@ public class Board {
         // Define colors for Map 3
         Color darkRed = new Color(139, 0, 0); // Dark red for walls
         Color lightRed = new Color(250, 128, 114); // Light coral for paths
+
+        BufferedImage grassBlock = ImageIO.read(Objects.requireNonNull(getClass().getResource("/game/images/grass.png")));
+        BufferedImage dirtBlock = ImageIO.read(Objects.requireNonNull(getClass().getResource("/game/images/dirt.png")));
 
         for (int row = 0; row < TILE_NUMBER; row++) {
             for (int col = 0; col < TILE_NUMBER; col++) {
@@ -93,7 +100,7 @@ public class Board {
                         graphics2D.setColor(darkGreen);
                     } else if (Settings.isMap3()) {
                         // Use dark red color for walls in Map 3
-                        graphics2D.setColor(darkRed);
+                        graphics2D.drawImage(grassBlock, tileX, tileY, 50,50, null);
                     } else {
                         // Use default colors for other maps
                         Color darkBlueStart = new Color(10, 30, 70);
@@ -101,20 +108,23 @@ public class Board {
                         Paint wallPaint = new GradientPaint(tileX, tileY, darkBlueStart, tileX + GRID_WIDTH, tileY + GRID_HEIGHT, darkBlueEnd);
                         graphics2D.setPaint(wallPaint);
                     }
-                    graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
+                    if (!Settings.isMap3())
+                        graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 } else {
                     if (Settings.isMap2()) {
                         // Use light green color for paths in Map 2
                         graphics2D.setColor(lightGreen);
                     } else if (Settings.isMap3()) {
                         // Use light coral color for paths in Map 3
-                        graphics2D.setColor(lightRed);
+                        //graphics2D.setColor(lightRed);
+                        graphics2D.drawImage(dirtBlock, tileX, tileY, 50, 50, null);
                     } else {
                         // Use default colors for other maps
                         Color lightPathColor = new Color(180, 200, 220); // Light blue-gray
                         graphics2D.setColor(lightPathColor);
                     }
-                    graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
+                    if (!Settings.isMap3())
+                        graphics2D.fillRect(tileX, tileY, GRID_WIDTH, GRID_HEIGHT);
                 }
             }
         }

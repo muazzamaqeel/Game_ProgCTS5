@@ -1,10 +1,16 @@
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
 
 public class HomeScreen extends JFrame {
     private Settings settings;
+    private AudioInputStream audioInputStream;
+    private Clip clip;
 
     public HomeScreen() {
         initUI();
@@ -26,6 +32,16 @@ public class HomeScreen extends JFrame {
         setSize(800, 800);
         setResizable(false);
         setLocationRelativeTo(null);
+
+        try {
+            startIntroMusic();
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -67,6 +83,11 @@ public class HomeScreen extends JFrame {
                 LoadingScreen loadingScreen = new LoadingScreen(HomeScreen.this);
                 loadingScreen.startLoading();
 
+                try {
+                    stopMusic();
+                } catch (LineUnavailableException ex) {
+                    throw new RuntimeException(ex);
+                }
 
             }
         });
@@ -101,6 +122,22 @@ public class HomeScreen extends JFrame {
         panel.add(Box.createHorizontalStrut(200), gbc);
 
         add(panel);
+    }
+
+    public void startIntroMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File audioFile = new File("src/game/music/Pac-ManWorld.wav");
+        audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+
+        clip = AudioSystem.getClip();
+        //clip.stop();
+        // Open the audio stream and start playing
+        clip.open(audioInputStream);
+        clip.start();
+    }
+
+    public void stopMusic() throws LineUnavailableException {
+        clip.stop();
+        clip = AudioSystem.getClip();
     }
 
     private void openSettings() {
