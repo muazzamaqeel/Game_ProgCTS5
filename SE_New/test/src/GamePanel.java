@@ -24,7 +24,7 @@ public class GamePanel extends JComponent {
     private boolean start = true;
     private Pacman pacman;
     private UserInput userInput;
-    private final int FPS = 60;
+    private final int FPS = 30;
     private final int TARGET_TIME = 1000000000 / FPS;
     boolean introPlayed = false;
 
@@ -42,6 +42,7 @@ public class GamePanel extends JComponent {
             long startTime = 0;
             while (start) {
                 startTime = System.nanoTime();
+                /*
                 if (clip == null || !introPlayed) {
                     if (!introPlayed) { //SE_New/test/
                         playAudio("src/game/music/RuinsArea(Maze-Intro).wav");
@@ -50,7 +51,10 @@ public class GamePanel extends JComponent {
                 }
                 if (!clip.isRunning()) {
                     playAudio("test/src/game/music/AnubisRex(Re-Pac).wav");
+
                 }
+
+                */
                 // Update game state
                 pacman.move(board);
                 for (Ghost ghost : ghosts) {
